@@ -1,35 +1,23 @@
 ﻿using AutoMapper;
 using AutoMapper.Extensions.ExpressionMapping;
 using CosmosQuery.Extensions;
+using CosmosQuery.Query;
 using Microsoft.AspNetCore.OData.Query;
 using Microsoft.Azure.Cosmos.Linq;
 
 namespace CosmosQuery;
 
-public static class QueryableExtensions
+public static class QueryableExt
 {
-    public static ICollection<TModel> Get<TModel, TEntity>(
+    public static ICollection<TModel> ExecuteQuery<TModel, TEntity>(
         this IQueryable<TEntity> query, 
         IMapper mapper, 
         ODataQueryOptions<TModel> options,
         QuerySettings? settings = null) where TModel : class
-    {        
-        IQueryable<TModel> modelQuery = query.GetQuery(mapper, options, settings);
-        return modelQuery.ToArray();
-    }
-
-    public static async Task<ICollection<TModel>> GetAsync<TModel, TEntity>(
-        this IQueryable<TEntity> query,
-        IMapper mapper, 
-        ODataQueryOptions<TModel> options, 
-        QuerySettings? settings = null,
-        CancellationToken cancellationToken = default) where TModel : class
     {
-        IQueryable<TModel> modelQuery = await query
-            .GetQueryAsync(mapper, options, settings, cancellationToken).ConfigureAwait(false);
-
-        return await modelQuery.ExecuteQueryAsync(cancellationToken).ConfigureAwait(false);
-    }
+        IQueryable<TModel> modelQuery = GetQuery(query, mapper, options, settings);
+        return modelQuery.ToArray();
+    }    
 
     public static IQueryable<TModel> GetQuery<TModel, TEntity>(
         this IQueryable<TEntity> query,
@@ -49,6 +37,21 @@ public static class QueryableExtensions
 
         query.ApplyCountQuery(mapper, filter, options);
         return query.GetQueryable(mapper, options, settings, filter);
+    }
+
+
+
+    public static async Task<ICollection<TModel>> ExecuteQueryAsync<TModel, TEntity>(
+        this IQueryable<TEntity> query,
+        IMapper mapper,
+        ODataQueryOptions<TModel> options,
+        QuerySettings? settings = null,
+        CancellationToken cancellationToken = default) where TModel : class
+    {
+        IQueryable<TModel> modelQuery = await 
+            GetQueryAsync(query, mapper, options, settings, cancellationToken).ConfigureAwait(false);
+
+        return await modelQuery.ExecuteQueryAsync(cancellationToken).ConfigureAwait(false);
     }
 
     public static async Task<IQueryable<TModel>> GetQueryAsync<TModel, TEntity>(
@@ -82,22 +85,27 @@ public static class QueryableExtensions
         ).Resource.ToArray();
     }
 
-    private static IQueryable<TModel> GetQueryable<TModel, TData>(this IQueryable<TData> query,
-            IMapper mapper,
-            ODataQueryOptions<TModel> options,
-            QuerySettings? settings,
-            Expression<Func<TModel, bool>>? filter)
-            where TModel : class
+    private static IQueryable<TModel> GetQueryable<TModel, TEntity>(
+        this IQueryable<TEntity> query,
+        IMapper mapper,
+        ODataQueryOptions<TModel> options,
+        QuerySettings? settings,
+        Expression<Func<TModel, bool>>? filter)
+        where TModel : class
     {
+        var selects = options.GetSelects();
+        var expansions = options.GetExpansions();
+
         throw new NotImplementedException();
     }
 
-    private static IQueryable<TModel> GetQuery<TModel, TEntity>(this IQueryable<TEntity> query,
-            IMapper mapper,
-            Expression<Func<TModel, bool>>? filter = null,
-            Expression<Func<IQueryable<TModel>, IQueryable<TModel>>>? queryFunc = null,
-            IEnumerable<Expression<Func<TModel, object>>>? includeProperties = null,
-            ProjectionSettings? projectionSettings = null)
+    private static IQueryable<TModel> GetQueryable<TModel, TEntity>(
+        this IQueryable<TEntity> query,
+        IMapper mapper,
+        Expression<Func<TModel, bool>>? filter = null,
+        Expression<Func<IQueryable<TModel>, IQueryable<TModel>>>? queryFunc = null,
+        IEnumerable<Expression<Func<TModel, object>>>? includeProperties = null,
+        ProjectionSettings? projectionSettings = null)
     {
         Expression<Func<TEntity, bool>> entityFilter = 
             mapper.MapExpression<Expression<Func<TEntity, bool>>>(filter);
@@ -184,5 +192,40 @@ public static class QueryableExtensions
             );
         }
         return (await query.CountAsync(cancellationToken).ConfigureAwait(false)).Resource;
+    }
+
+    private static IQueryable<TModel> ApplyFilters<TModel>(
+            this IQueryable<TModel> query, List<List<PathSegment>> selects, ODataQueryContext context)
+    {
+        List<List<PathSegment>> memberFilters = GetMemberFilters();
+        List<List<PathSegment>> collectionFilters = GetMemberCollectionFilters();
+
+        //List<List<ODataExpansionOptions>> methods = new();// GetQueryMethods();
+
+        if (!memberFilters.Any() && !collectionFilters.Any() /*&& !methods.Any()*/)
+            return query;
+
+        Expression expression = query.Expression;
+
+        //if (methods.Any())
+        //    expression = UpdateProjectionMethodExpression(expression);
+
+        memberFilters.ForEach
+        (
+            segments => expression = MemberFilterAppender.AppendFilters(expression, segments, context)
+        );
+
+        collectionFilters.ForEach
+        (
+            segments => expression = MemberCollectionFilterAppender.AppendFilters(expression, segments, context)
+        );
+
+        return query.Provider.CreateQuery<TModel>(expression);
+
+        List<List<PathSegment>> GetMemberFilters() =>
+            selects.Where(s => !s.Last().MemberType.IsList()).ToList();
+
+        List<List<PathSegment>> GetMemberCollectionFilters() =>
+            selects.Where(s => s.Last().MemberType.IsList()).ToList();
     }
 }

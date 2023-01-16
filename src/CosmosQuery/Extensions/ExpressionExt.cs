@@ -2,7 +2,7 @@
 
 namespace CosmosQuery.Extensions;
 
-internal static class ExpressionExtensions
+internal static class ExpressionExt
 {
     public static Expression ReplaceParameter(this Expression expression, ParameterExpression source, Expression target) =>
         new ParameterReplacer(source, target).Visit(expression);

@@ -1,11 +1,34 @@
-﻿using Microsoft.AspNetCore.OData.Extensions;
+﻿using CosmosQuery.Query;
+using LogicBuilder.Expressions.Utils.DataSource;
+using Microsoft.AspNetCore.OData.Extensions;
 using Microsoft.AspNetCore.OData.Query;
+using Microsoft.OData.UriParser;
 
 namespace CosmosQuery.Extensions;
 
-internal static class OdataExtensions
+internal static class OdataExt
 {
-    
+    public static List<List<PathSegment>> GetSelects<TModel>(this ODataQueryOptions<TModel> options)
+    {
+        throw new NotImplementedException();
+    }
+
+    public static List<List<PathSegment>> GetExpansions<TModel>(this ODataQueryOptions<TModel> options)
+    {
+        throw new NotImplementedException();
+    }
+
+    public static LambdaExpression GetFilterExpression(this FilterClause clause, Type type, ODataQueryContext context)
+    {
+        var parameters = new Dictionary<string, ParameterExpression>();
+        FilterHelper helper = new(parameters, context);
+
+        return helper
+            .GetFilterPart(clause.Expression)
+            .GetFilter(type, parameters, helper.LiteralName)
+            .ReplaceParameter(type);
+    }
+
     public static Expression<Func<TModel, bool>>? ToFilterExpression<TModel>(
         this ODataQueryOptions<TModel> options,
         HandleNullPropagationOption handleNullPropagation = HandleNullPropagationOption.Default,

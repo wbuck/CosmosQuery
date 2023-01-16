@@ -9,10 +9,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Operators\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="AutoMapper.Extensions.ExpressionMapping" Version="6.0.2" />
     <PackageReference Include="LogicBuilder.Expressions.Utils" Version="5.0.7" />
     <PackageReference Include="Microsoft.AspNetCore.OData" Version="8.0.12" />
