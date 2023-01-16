@@ -1,4 +1,5 @@
-﻿using CosmosQuery.Query;
+﻿using CosmosQuery.Extensions;
+using CosmosQuery.Query;
 using LogicBuilder.Expressions.Utils;
 using Microsoft.AspNetCore.OData.Query;
 using Microsoft.OData.UriParser;
@@ -43,7 +44,7 @@ internal sealed class MemberCollectionFilterAppender : ProjectionVisitorBase
     }
 
     private Expression GetCallExpression(MethodCallExpression callExpression, in PathSegment pathSegment) =>
-        FilterAppender.AppendFilter(callExpression, ToExpansion(pathSegment), this.context);
+        FilterAppender.AppendFilter(callExpression, pathSegment, this.context);
 
     private Expression GetBindingExpression(MemberAssignment memberAssignment, FilterClause clause)
     {
@@ -55,14 +56,4 @@ internal sealed class MemberCollectionFilterAppender : ProjectionVisitorBase
             clause.GetFilterExpression(elementType, this.context)
         ).ToListCall(elementType);
     }
-
-    private ODataExpansionOptions ToExpansion(in PathSegment pathSegment) =>
-        new()
-        {
-            MemberName = pathSegment.MemberName,
-            MemberType = pathSegment.MemberType,
-            ParentType = pathSegment.ParentType,
-            FilterOptions = pathSegment.FilterOptions,
-            QueryOptions = pathSegment.QueryOptions
-        };
 }

@@ -18,12 +18,14 @@ using CosmosQuery.Operators;
 using System.Reflection;
 
 namespace CosmosQuery;
+
 internal sealed class FilterHelper
 {
+    private const string DollarThis = "$this";
+    private const string DollarIt = "$it";
+
     private readonly IDictionary<string, ParameterExpression> parameters;
-    private static readonly IDictionary<EdmTypeStructure, Type> typesCache = TypeExt.GetEdmToClrTypeMappings();
-    private static readonly HashSet<string> supportedLiterals = new() { "$this", "$it" };
-    private string literalName = "$it";
+    private static readonly IDictionary<EdmTypeStructure, Type> typesCache = TypeExt.GetEdmToClrTypeMappings();    
     private readonly IEdmModel edmModel;
 
 
@@ -31,16 +33,6 @@ internal sealed class FilterHelper
     {
         this.parameters = parameters;
         this.edmModel = context.Model;
-    }
-
-    public string LiteralName
-    {
-        get => this.literalName;
-        private set => this.literalName = value switch
-        {
-            var literal when supportedLiterals.Contains(literal) => literal,
-            _ => this.literalName
-        };
     }
 
     public IExpressionPart GetFilterPart(SingleValueNode singleValueNode)
@@ -296,29 +288,19 @@ internal sealed class FilterHelper
             GetClrType(singleResourceCastNode.TypeReference)
         );
 
-    //WARREN
-    private IExpressionPart GetNonResourceRangeVariableReferenceNodeFilterPart(NonResourceRangeVariableReferenceNode nonResourceRangeVariableReferenceNode)
-    {
-        var parameter = new ParameterOperator
+    private IExpressionPart GetNonResourceRangeVariableReferenceNodeFilterPart(NonResourceRangeVariableReferenceNode nonResourceRangeVariableReferenceNode) => 
+        new ParameterOperator
         (
             parameters,
-            nonResourceRangeVariableReferenceNode.RangeVariable.Name
+            ReplaceDollarThisParameter(nonResourceRangeVariableReferenceNode.RangeVariable.Name)
         );
-        LiteralName = parameter.ParameterName;
-        return parameter;
-    }
 
-
-    private IExpressionPart GetResourceRangeVariableReferenceNodeFilterPart(ResourceRangeVariableReferenceNode resourceRangeVariableReferenceNode)
-    {
-        var parameter = new ParameterOperator
+    private IExpressionPart GetResourceRangeVariableReferenceNodeFilterPart(ResourceRangeVariableReferenceNode resourceRangeVariableReferenceNode) =>
+        new ParameterOperator
         (
             parameters,
-            resourceRangeVariableReferenceNode.RangeVariable.Name
+            ReplaceDollarThisParameter(resourceRangeVariableReferenceNode.RangeVariable.Name)
         );
-        LiteralName = parameter.ParameterName;
-        return parameter;
-    }
 
 
     private bool IsTrueConstantExpression(SingleValueNode node)
@@ -794,16 +776,12 @@ internal sealed class FilterHelper
 
         static bool ShouldConvert(Type leftType, Type rightType)
             => BothTypesDateRelated(leftType, rightType)
-#if NET6_0
                 && (
                         leftType == typeof(Date)
                         || rightType == typeof(Date)
                         || leftType == typeof(DateOnly)
                         || rightType == typeof(DateOnly)
                    );
-#else
-                    && (leftType == typeof(Date) || rightType == typeof(Date));
-#endif
     }
 
     private bool ShouldConvertEnumToInt(SingleValueNode node)
@@ -833,15 +811,14 @@ internal sealed class FilterHelper
 
         static bool ShouldConvert(Type leftType, Type rightType)
             => BothTypesDateTimeRelated(leftType, rightType)
-#if NET6_0
                 && (
                         leftType == typeof(TimeOfDay)
                         || rightType == typeof(TimeOfDay)
                         || leftType == typeof(TimeOnly)
                         || rightType == typeof(TimeOnly)
                    );
-#else
-                    && (leftType == typeof(TimeOfDay) || rightType == typeof(TimeOfDay));
-#endif
     }
+
+    private static string ReplaceDollarThisParameter(string rangeVariableName) =>
+           rangeVariableName == DollarThis ? DollarIt : rangeVariableName;
 }

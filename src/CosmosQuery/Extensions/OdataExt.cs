@@ -1,5 +1,5 @@
 ﻿using CosmosQuery.Query;
-using LogicBuilder.Expressions.Utils.DataSource;
+using LogicBuilder.Expressions.Utils;
 using Microsoft.AspNetCore.OData.Extensions;
 using Microsoft.AspNetCore.OData.Query;
 using Microsoft.OData.UriParser;
@@ -21,12 +21,9 @@ internal static class OdataExt
     public static LambdaExpression GetFilterExpression(this FilterClause clause, Type type, ODataQueryContext context)
     {
         var parameters = new Dictionary<string, ParameterExpression>();
-        FilterHelper helper = new(parameters, context);
-
-        return helper
+        return new FilterHelper(parameters, context)
             .GetFilterPart(clause.Expression)
-            .GetFilter(type, parameters, helper.LiteralName)
-            .ReplaceParameter(type);
+            .GetFilter(type, parameters, clause.RangeVariable.Name);
     }
 
     public static Expression<Func<TModel, bool>>? ToFilterExpression<TModel>(

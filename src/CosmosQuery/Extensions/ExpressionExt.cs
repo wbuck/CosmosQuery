@@ -13,4 +13,11 @@ internal static class ExpressionExt
             ExpressionType.Quote => ((UnaryExpression)expression).Operand.UnQuote(),
             _ => expression,
         };
+
+    public static MethodCallExpression ToListCall(this Expression expression, Type elementType) =>
+        Expression.Call
+        (
+            LinqMethods.EnumerableToListMethod.MakeGenericMethod(elementType),
+            expression
+        );
 }

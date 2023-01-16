@@ -2,6 +2,8 @@
 using AutoMapper.Extensions.ExpressionMapping;
 using CosmosQuery.Extensions;
 using CosmosQuery.Query;
+using CosmosQuery.Visitors;
+using LogicBuilder.Expressions.Utils;
 using Microsoft.AspNetCore.OData.Query;
 using Microsoft.Azure.Cosmos.Linq;
 
