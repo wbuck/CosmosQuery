@@ -1,0 +1,45 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.3.32804.467
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CosmosQuery", "src\CosmosQuery\CosmosQuery.csproj", "{711677BB-CE29-43D3-AD8D-85AB1454E2F2}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{21306AB3-2F46-4D8D-919A-003A11C012E7}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{DD9D6155-BEF9-451A-BBB2-FBB8B820E8CB}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "unit", "unit", "{6F42FF57-9825-4430-AEC3-FD37DA2AFB93}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "integration", "integration", "{5C955D7D-8854-4A4A-9207-6E5CF931AD77}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CosmosQuery.Integration.Tests", "test\integration\CosmosQuery.Integration.Tests\CosmosQuery.Integration.Tests.csproj", "{625377C9-D7B0-4D43-9EC0-A1586A161740}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{711677BB-CE29-43D3-AD8D-85AB1454E2F2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{711677BB-CE29-43D3-AD8D-85AB1454E2F2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{711677BB-CE29-43D3-AD8D-85AB1454E2F2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{711677BB-CE29-43D3-AD8D-85AB1454E2F2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{625377C9-D7B0-4D43-9EC0-A1586A161740}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{625377C9-D7B0-4D43-9EC0-A1586A161740}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{625377C9-D7B0-4D43-9EC0-A1586A161740}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{625377C9-D7B0-4D43-9EC0-A1586A161740}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{711677BB-CE29-43D3-AD8D-85AB1454E2F2} = {21306AB3-2F46-4D8D-919A-003A11C012E7}
+		{6F42FF57-9825-4430-AEC3-FD37DA2AFB93} = {DD9D6155-BEF9-451A-BBB2-FBB8B820E8CB}
+		{5C955D7D-8854-4A4A-9207-6E5CF931AD77} = {DD9D6155-BEF9-451A-BBB2-FBB8B820E8CB}
+		{625377C9-D7B0-4D43-9EC0-A1586A161740} = {5C955D7D-8854-4A4A-9207-6E5CF931AD77}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {BEB406E2-4714-4AD6-A451-DA0E39355503}
+	EndGlobalSection
+EndGlobal
