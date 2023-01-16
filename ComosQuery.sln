@@ -15,6 +15,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "integration", "integration"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CosmosQuery.Integration.Tests", "test\integration\CosmosQuery.Integration.Tests\CosmosQuery.Integration.Tests.csproj", "{625377C9-D7B0-4D43-9EC0-A1586A161740}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CosmosQuery.Unit.Tests", "test\unit\CosmosQuery.Unit.Tests\CosmosQuery.Unit.Tests.csproj", "{9FA9847F-235D-45D4-9FB2-EA19BE7D6720}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -29,6 +31,10 @@ Global
 		{625377C9-D7B0-4D43-9EC0-A1586A161740}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{625377C9-D7B0-4D43-9EC0-A1586A161740}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{625377C9-D7B0-4D43-9EC0-A1586A161740}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9FA9847F-235D-45D4-9FB2-EA19BE7D6720}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9FA9847F-235D-45D4-9FB2-EA19BE7D6720}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9FA9847F-235D-45D4-9FB2-EA19BE7D6720}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9FA9847F-235D-45D4-9FB2-EA19BE7D6720}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -38,6 +44,7 @@ Global
 		{6F42FF57-9825-4430-AEC3-FD37DA2AFB93} = {DD9D6155-BEF9-451A-BBB2-FBB8B820E8CB}
 		{5C955D7D-8854-4A4A-9207-6E5CF931AD77} = {DD9D6155-BEF9-451A-BBB2-FBB8B820E8CB}
 		{625377C9-D7B0-4D43-9EC0-A1586A161740} = {5C955D7D-8854-4A4A-9207-6E5CF931AD77}
+		{9FA9847F-235D-45D4-9FB2-EA19BE7D6720} = {6F42FF57-9825-4430-AEC3-FD37DA2AFB93}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {BEB406E2-4714-4AD6-A451-DA0E39355503}
