@@ -1,7 +1,7 @@
 ﻿using System.Reflection;
 
 namespace CosmosQuery;
-internal static class CustomMethodCache
+public static class CustomMethodCache
 {
     private static readonly Dictionary<string, MethodInfo> customMethods = new();
 
