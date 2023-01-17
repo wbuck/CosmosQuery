@@ -3,8 +3,9 @@ using LogicBuilder.Expressions.Utils;
 using Microsoft.AspNetCore.OData.Query;
 using Microsoft.OData.UriParser;
 
-namespace CosmosQuery.ExpressionBuilders;
-internal static class FilterBuilder
+namespace CosmosQuery;
+
+public static class FilterBuilder
 {
     public static LambdaExpression GetFilterExpression(this FilterClause clause, Type type, ODataQueryContext context)
     {
