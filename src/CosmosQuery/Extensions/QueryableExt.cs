@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using AutoMapper.Extensions.ExpressionMapping;
+using CosmosQuery.ExpressionBuilders;
 using CosmosQuery.Extensions;
 using CosmosQuery.Query;
 using CosmosQuery.Visitors;

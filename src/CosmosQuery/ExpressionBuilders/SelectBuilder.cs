@@ -3,7 +3,7 @@ using CosmosQuery.Query;
 using LogicBuilder.Expressions.Utils;
 using System.Globalization;
 
-namespace CosmosQuery;
+namespace CosmosQuery.ExpressionBuilders;
 internal static class SelectBuilder
 {
     public static ICollection<Expression<Func<TSource, object>>> BuildIncludes<TSource>(
@@ -209,7 +209,7 @@ internal static class SelectBuilder
         if (short.TryParse(lastChar, out short lastCharShort))
         {
             return string.Concat(currentParameterName[..^1],
-                (lastCharShort++).ToString(CultureInfo.CurrentCulture));
+                lastCharShort++.ToString(CultureInfo.CurrentCulture));
         }
 
         return currentParameterName += "0";
