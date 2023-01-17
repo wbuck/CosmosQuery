@@ -64,7 +64,7 @@ internal sealed class FilterHelper
         {
             SingleValueNode singleValueNode => GetFilterPart(singleValueNode),
             CollectionNode collectionNode => GetFilterPart(collectionNode),
-            _ => throw new ArgumentException(nameof(queryNode)),
+            _ => throw new ArgumentException(null, nameof(queryNode)),
         };
 
     private IExpressionPart GetConstantOperandFilterPart(ConstantNode constantNode)

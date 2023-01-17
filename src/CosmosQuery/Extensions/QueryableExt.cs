@@ -98,8 +98,44 @@ public static class QueryableExt
         var selects = options.GetSelects();
         var expansions = options.GetExpansions();
 
-        throw new NotImplementedException();
+        var includes = expansions
+            .BuildIncludes<TModel>(selects)
+            .ToList();
+
+        return query.GetQueryable
+        (
+            mapper,
+            filter,
+            options.GetQueryableExpression(settings?.ODataSettings),
+            includes,
+            settings?.ProjectionSettings
+        ).ApplyFilters(expansions.Concat(selects).ToList().FilterSelects(), options.Context);
     }
+
+    private static List<List<PathSegment>> FilterSelects(this List<List<PathSegment>> pathSegments)
+    {
+        List<List<PathSegment>> filtered = new(pathSegments.Count);
+        foreach (List<PathSegment> segments in pathSegments)
+        {
+            PathSegment lastSegment = segments.Last();
+            if (lastSegment.FilterOptions is not null || lastSegment.QueryOptions is not null)
+            {
+                filtered.Add(segments);
+            }
+
+            var selectSegments = lastSegment.SelectPaths;
+            if (selectSegments is not null)
+            {
+                filtered.AddRange
+                (
+                    selectSegments
+                        .Where(s => s.Last().FilterOptions is not null || s.Last().QueryOptions is not null)
+                        .Select(s => segments.Concat(s).ToList())
+                );
+            }
+        }
+        return filtered;
+    }    
 
     private static IQueryable<TModel> GetQueryable<TModel, TEntity>(
         this IQueryable<TEntity> query,

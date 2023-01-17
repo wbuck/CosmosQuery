@@ -1,4 +1,5 @@
 ﻿using CosmosQuery.Edm;
+using CosmosQuery.Query;
 using LogicBuilder.Expressions.Utils;
 using Microsoft.AspNetCore.OData.Edm;
 using Microsoft.OData.Edm;
@@ -24,9 +25,6 @@ internal static class TypeExt
             && info.GetMemberType().IsLiteralType()
         ).ToArray();
     }
-
-    private static MemberInfo[] GetMemberInfos(this Type parentType)
-        => parentType.GetMembers(BindingFlags.Public | BindingFlags.Instance | BindingFlags.FlattenHierarchy | BindingFlags.IgnoreCase);
 
     public static Type GetClrType(string fullName, bool isNullable, IDictionary<EdmTypeStructure, Type> typesCache)
         => GetClrType(new EdmTypeStructure(fullName, isNullable), typesCache);
@@ -109,6 +107,44 @@ internal static class TypeExt
 
     public static bool IsListOfLiteralTypes(this Type type) =>
         type.IsList() && type.GetUnderlyingElementType().IsLiteralType();
+
+    public static List<List<PathSegment>> GetLiteralAndComplexSelects(this Type parentType, IEdmModel edmModel) =>
+        parentType.GetLiteralSelects().Concat(edmModel.GetComplexTypeSelects(parentType)).ToList();
+
+    public static List<List<PathSegment>> GetLiteralSelects(this Type parentType, List<PathSegment>? pathSegments = null) =>
+        parentType.GetLiteralTypeMembers()
+            .Select(member => new List<PathSegment>(pathSegments ?? Enumerable.Empty<PathSegment>())
+            {
+                new
+                (
+                    member,
+                    parentType,
+                    member.GetMemberType(),
+                    EdmTypeKind.Primitive
+                )
+            }).ToList();
+
+    public static MemberInfo[] GetLiteralTypeMembers(this Type parentType)
+    {
+        if (parentType.IsList())
+            return Array.Empty<MemberInfo>();
+
+        return parentType.GetMemberInfos().Where
+        (
+            info =>
+               (info.MemberType == MemberTypes.Field || info.MemberType == MemberTypes.Property) &&
+               (info.GetMemberType().IsLiteralType() || info.IsListOfLiteralTypes())
+        ).ToArray();
+    }
+
+    public static MemberInfo[] GetPropertiesAndFields(this Type parentType) =>
+        parentType.GetMemberInfos()
+            .Where(info =>
+                info.MemberType == MemberTypes.Field || info.MemberType == MemberTypes.Property)
+            .ToArray();
+
+    private static MemberInfo[] GetMemberInfos(this Type parentType)
+        => parentType.GetMembers(BindingFlags.Public | BindingFlags.Instance | BindingFlags.FlattenHierarchy | BindingFlags.IgnoreCase);
 
     private static readonly Lazy<IAssemblyResolver> assemblyResolver
         = new(() => new AssemblyResolver());
