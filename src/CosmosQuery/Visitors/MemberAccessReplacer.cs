@@ -16,9 +16,10 @@ internal sealed class MemberAccessReplacer : ExpressionVisitor
     protected override Expression VisitMember(MemberExpression node)
     {
         if (node.NodeType == ExpressionType.MemberAccess
-            && this.currentType == node.Expression?.Type)
+            && this.currentType == node.Expression!.Type)
         {
-            return Expression.MakeMemberAccess(this.replacement, node.Member);            
+            var expr = Expression.MakeMemberAccess(this.replacement, node.Member);
+            return expr;
         }
         return base.VisitMember(node);
     }

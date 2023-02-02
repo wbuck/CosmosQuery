@@ -37,6 +37,10 @@ internal class LinqMethods
     private static readonly MethodInfo _enumerableToListMethod =
         GetGenericMethod(_ => Enumerable.ToList(default(IEnumerable<int>)!));
 
+    private static readonly MethodInfo _enumerableToArrayMethod =
+        GetGenericMethod(_ => Enumerable.ToArray(default(IEnumerable<int>)!));
+
+
     public static MethodInfo EnumerableWhereMethod =>
         _enumerableWhereMethod;
     public static MethodInfo QueryableSkipMethod =>
@@ -59,6 +63,8 @@ internal class LinqMethods
         _enumerableOrderByDescendingMethod;
     public static MethodInfo EnumerableToListMethod =>
         _enumerableToListMethod;
+    public static MethodInfo EnumerableToArrayMethod =>
+        _enumerableToArrayMethod;
 
     private static MethodInfo GetGenericMethod<TReturn>(Expression<Func<object, TReturn>> expression) =>
         GetGenericMethod(expression as Expression);

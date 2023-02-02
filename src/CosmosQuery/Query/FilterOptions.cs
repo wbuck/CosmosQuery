@@ -2,4 +2,4 @@
 
 namespace CosmosQuery.Query;
 
-internal record FilterOptions(FilterClause Clause);
+internal record FilterOptions(FilterClause FilterClause);

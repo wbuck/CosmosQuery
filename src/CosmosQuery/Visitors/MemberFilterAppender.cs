@@ -17,7 +17,7 @@ internal sealed class MemberFilterAppender : ProjectionVisitorBase
     }
 
     public static Expression AppendFilters(Expression expression, List<PathSegment> pathSegments, ODataQueryContext context) =>
-        new MemberFilterAppender(pathSegments, context).Visit(expression);
+            new MemberFilterAppender(pathSegments, context).Visit(expression);
 
     protected override Expression MatchedExpression(PathSegment pathSegment, MemberInitExpression node, MemberAssignment binding)
     {
@@ -56,7 +56,6 @@ internal sealed class MemberFilterAppender : ProjectionVisitorBase
         var parameters = new Dictionary<string, ParameterExpression>();
 
         Type memberType = this.pathSegments.Last().ElementType;
-
         FilterClause clause = GetFilter();
 
         LambdaExpression lambdaExpression = new FilterHelper(parameters, this.context)
@@ -76,6 +75,6 @@ internal sealed class MemberFilterAppender : ProjectionVisitorBase
     private FilterClause GetFilter()
     {        
         Debug.Assert(this.pathSegments.Last().FilterOptions is not null);
-        return this.pathSegments.Last().FilterOptions!.Clause;
+        return this.pathSegments.Last().FilterOptions!.FilterClause;
     }
 }

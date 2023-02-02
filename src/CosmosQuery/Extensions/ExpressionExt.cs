@@ -24,7 +24,14 @@ internal static class ExpressionExt
             LinqMethods.EnumerableToListMethod.MakeGenericMethod(elementType),
             expression
         );
-             
+
+    public static MethodCallExpression ToArrayCall(this Expression expression, Type elementType) =>
+        Expression.Call
+        (
+            LinqMethods.EnumerableToArrayMethod.MakeGenericMethod(elementType),
+            expression
+        );
+
     public static LambdaExpression MakeLambdaExpression(this ParameterExpression param, Expression body)
     {
         Type[] typeArgs = new[] { param.Type, body.Type };

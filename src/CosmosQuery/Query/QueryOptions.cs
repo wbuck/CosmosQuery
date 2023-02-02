@@ -2,4 +2,4 @@
 
 namespace CosmosQuery.Query;
 
-internal record QueryOptions(OrderByClause Clause, int? Skip, int? Top);
+internal record QueryOptions(OrderByClause OrderByClause, int? Skip, int? Top);

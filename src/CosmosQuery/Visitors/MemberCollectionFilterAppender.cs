@@ -9,7 +9,7 @@ namespace CosmosQuery.Visitors;
 internal sealed class MemberCollectionFilterAppender : ProjectionVisitorBase
 {
     private MemberCollectionFilterAppender(List<PathSegment> pathSegments, ODataQueryContext context)
-        : base(pathSegments, context)
+            : base(pathSegments, context)
     { }
 
     public static Expression AppendFilters(Expression expression, List<PathSegment> filterPath, ODataQueryContext context) =>
@@ -17,7 +17,7 @@ internal sealed class MemberCollectionFilterAppender : ProjectionVisitorBase
 
     protected override Expression MatchedExpression(PathSegment pathSegment, MemberInitExpression node, MemberAssignment binding)
     {
-        if (pathSegment.FilterOptions?.Clause is not FilterClause clause)
+        if (pathSegment.FilterOptions?.FilterClause is not FilterClause clause)
             return base.VisitMemberInit(node);
 
         if (!binding.Member.GetMemberType().IsList())
@@ -49,12 +49,18 @@ internal sealed class MemberCollectionFilterAppender : ProjectionVisitorBase
 
     private Expression GetBindingExpression(MemberAssignment memberAssignment, FilterClause clause)
     {
-        Type elementType = memberAssignment.Expression.Type.GetCurrentType();
-        return Expression.Call
+        Type memberType = memberAssignment.Member.GetMemberType();
+        Type elementType = memberType.GetCurrentType();
+
+        MethodCallExpression callExpression = Expression.Call
         (
             LinqMethods.EnumerableWhereMethod.MakeGenericMethod(elementType),
             memberAssignment.Expression,
             clause.GetFilterExpression(elementType, this.context)
-        ).ToListCall(elementType);
+        );
+
+        return memberType.IsArray
+            ? callExpression.ToArrayCall(elementType)
+            : callExpression.ToListCall(elementType);
     }
 }

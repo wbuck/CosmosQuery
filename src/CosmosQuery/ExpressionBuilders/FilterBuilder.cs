@@ -12,8 +12,9 @@ public static class FilterBuilder
         var parameters = new Dictionary<string, ParameterExpression>();
         return new FilterHelper(parameters, context)
             .GetFilterPart(clause.Expression)
-            .GetFilter(type, parameters, clause.RangeVariable.Name);
-    }
+            .GetFilter(type, parameters, clause.RangeVariable.Name)
+            .ReplaceParameter();
+    }    
 
     public static Expression<Func<TModel, bool>>? ToFilterExpression<TModel>(
         this ODataQueryOptions<TModel> options,
@@ -90,5 +91,24 @@ public static class FilterBuilder
 
         MethodCallExpression whereMethodCallExpression = (MethodCallExpression)queryable.Expression;
         return (Expression<Func<TModel, bool>>?)(whereMethodCallExpression.Arguments[1].UnQuote() as LambdaExpression);
+    }
+
+    // Parameters that start with the '$' character are illegal
+    // in Cosmos DB.
+    private static LambdaExpression ReplaceParameter(this LambdaExpression lambda) =>
+        lambda.Parameters.Where(p => p.Name?.StartsWith('$') ?? false).Aggregate
+        (
+            lambda,
+            (expr, param) => (LambdaExpression)expr.ReplaceParameter(param, param.NewParameter())
+        );
+
+    private static ParameterExpression NewParameter(this ParameterExpression expression)
+    {
+        if (expression.Name is null)
+            return expression;
+
+        int index = expression.Name!.LastIndexOf('$');
+        string name = index < 0 ? expression.Name : expression.Name[(index + 1)..];
+        return Expression.Parameter(expression.Type, name);
     }
 }

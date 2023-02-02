@@ -27,7 +27,7 @@ internal class FilterAppender : ExpressionVisitor
         Type elementType = this.pathSegment.ElementType;
 
         if (node.Method.Name == nameof(Queryable.Select)
-            && this.pathSegment.FilterOptions?.Clause is FilterClause clause
+            && this.pathSegment.FilterOptions?.FilterClause is FilterClause clause
             && elementType == node.Type.GetUnderlyingElementType()
             && this.expression.ToString().StartsWith(node.ToString()))//makes sure we're not updating some nested "Select"
         {
