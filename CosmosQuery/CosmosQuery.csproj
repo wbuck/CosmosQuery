@@ -2,7 +2,7 @@
 
   <PropertyGroup>
   	<TargetFrameworks>net5.0;net6.0</TargetFrameworks>
-	<Nullable>annotations</Nullable>
+	<Nullable>enable</Nullable>
   	<RootNamespace>CosmosQuery</RootNamespace>
   	<PackageId>CosmosQuery</PackageId>
   	<Description>Creates LINQ expressions from ODataQueryOptions and executes the query.</Description>
@@ -22,6 +22,7 @@
   	<EmbedUntrackedSources>true</EmbedUntrackedSources>
   	<Deterministic>true</Deterministic>
   	<ContinuousIntegrationBuild Condition="'$(GITHUB_ACTIONS)' == 'true'">true</ContinuousIntegrationBuild>
+  	<ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
   <ItemGroup>

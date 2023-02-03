@@ -3,20 +3,15 @@ using AutoMapper.Extensions.ExpressionMapping;
 using LogicBuilder.Expressions.Utils;
 using Microsoft.AspNetCore.OData.Query;
 using Microsoft.Azure.Cosmos.Linq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
 using System.Runtime.InteropServices;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace AutoMapper.AspNet.OData;
 
 public static class QueryableExtensions
 {
     public static ICollection<TModel> Get<TModel, TData>(this IQueryable<TData> query,
-        IMapper mapper, ODataQueryOptions<TModel> options, QuerySettings querySettings = null)
+        IMapper mapper, ODataQueryOptions<TModel> options, QuerySettings? querySettings = null)
          where TModel : class
     {
         IQueryable<TModel> modelQuery = GetQuery(query, mapper, options, querySettings);
@@ -24,7 +19,7 @@ public static class QueryableExtensions
     }
 
     public static async Task<ICollection<TModel>> GetAsync<TModel, TData>(this IQueryable<TData> query, 
-        IMapper mapper, ODataQueryOptions<TModel> options, QuerySettings querySettings = null)
+        IMapper mapper, ODataQueryOptions<TModel> options, QuerySettings? querySettings = null)
             where TModel : class
     {
         IQueryable<TModel> modelQuery = 
@@ -38,7 +33,7 @@ public static class QueryableExtensions
         this IQueryable<TData> query, 
         IMapper mapper, 
         ODataQueryOptions<TModel> options, 
-        QuerySettings querySettings = null) where TModel : class
+        QuerySettings? querySettings = null) where TModel : class
     {
         query = query ?? throw new ArgumentNullException(nameof(query));
         mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
@@ -60,7 +55,7 @@ public static class QueryableExtensions
         this IQueryable<TData> query,
         IMapper mapper,
         ODataQueryOptions<TModel> options,
-        QuerySettings querySettings = null) where TModel : class
+        QuerySettings? querySettings = null) where TModel : class
     {
         query = query ?? throw new ArgumentNullException(nameof(query));
         mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
@@ -127,14 +122,14 @@ public static class QueryableExtensions
 
     private static IQueryable<TModel> GetQuery<TModel, TData>(this IQueryable<TData> query,
             IMapper mapper,
-            Expression<Func<TModel, bool>> filter = null,
-            Expression<Func<IQueryable<TModel>, IQueryable<TModel>>> queryFunc = null,
-            IEnumerable<Expression<Func<TModel, object>>> includeProperties = null,
-            ProjectionSettings projectionSettings = null)
+            Expression<Func<TModel, bool>>? filter = null,
+            Expression<Func<IQueryable<TModel>, IQueryable<TModel>>>? queryFunc = null,
+            IEnumerable<Expression<Func<TModel, object>>>? includeProperties = null,
+            ProjectionSettings? projectionSettings = null)
     {
         Expression<Func<TData, bool>> f = mapper.MapExpression<Expression<Func<TData, bool>>>(filter);
 
-        Func<IQueryable<TData>, IQueryable<TData>> mappedQueryFunc = 
+        Func<IQueryable<TData>, IQueryable<TData>>? mappedQueryFunc = 
             mapper.MapExpression<Expression<Func<IQueryable<TData>, IQueryable<TData>>>>(queryFunc)?.Compile();
 
         if (filter is not null)

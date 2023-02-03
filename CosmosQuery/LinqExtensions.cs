@@ -33,9 +33,9 @@ namespace AutoMapper.AspNet.OData
         /// <typeparam name="T"></typeparam>
         /// <param name="filterOption"></param>
         /// <returns></returns>
-        public static Expression<Func<T, bool>> ToFilterExpression<T>(this FilterQueryOption filterOption, HandleNullPropagationOption handleNullPropagation = HandleNullPropagationOption.Default, TimeZoneInfo timeZone = null)
+        public static Expression<Func<T, bool>>? ToFilterExpression<T>(this FilterQueryOption? filterOption, HandleNullPropagationOption handleNullPropagation = HandleNullPropagationOption.Default, TimeZoneInfo? timeZone = null)
         {
-            if (filterOption == null)
+            if (filterOption is null)
                 return null;
 
             IQueryable queryable = Enumerable.Empty<T>().AsQueryable();
@@ -44,61 +44,61 @@ namespace AutoMapper.AspNet.OData
 
             MethodCallExpression whereMethodCallExpression = (MethodCallExpression)queryable.Expression;
 
-            return (Expression<Func<T, bool>>)(whereMethodCallExpression.Arguments[1].Unquote() as LambdaExpression);
+            return (Expression<Func<T, bool>>)(LambdaExpression)whereMethodCallExpression.Arguments[1].Unquote();
         }
 
         /// <summary>
         /// Returns a lambda expression representing the filter
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <param name="filterOption"></param>
+        /// <param name="searchOption"></param>
         /// <returns></returns>
-        public static Expression<Func<T, bool>> ToSearchExpression<T>(this SearchQueryOption filterOption, HandleNullPropagationOption handleNullPropagation = HandleNullPropagationOption.Default, TimeZoneInfo timeZone = null)
+        public static Expression<Func<T, bool>>? ToSearchExpression<T>(this SearchQueryOption? searchOption, HandleNullPropagationOption handleNullPropagation = HandleNullPropagationOption.Default, TimeZoneInfo? timeZone = null)
         {
-            if (filterOption == null)
+            if (searchOption is null)
                 return null;
 
             IQueryable queryable = Enumerable.Empty<T>().AsQueryable();
-            queryable = filterOption.ApplyTo(queryable, new ODataQuerySettings() { HandleNullPropagation = handleNullPropagation, TimeZone = timeZone });
+            queryable = searchOption.ApplyTo(queryable, new ODataQuerySettings() { HandleNullPropagation = handleNullPropagation, TimeZone = timeZone });
 
             MethodCallExpression whereMethodCallExpression = (MethodCallExpression)queryable.Expression;
 
-            return (Expression<Func<T, bool>>)(whereMethodCallExpression.Arguments[1].Unquote() as LambdaExpression);
+            return (Expression<Func<T, bool>>)(LambdaExpression)whereMethodCallExpression.Arguments[1].Unquote();
         }
 
-        public static Expression<Func<T, bool>> ToFilterExpression<T>(this ODataQueryOptions<T> options,
+        public static Expression<Func<T, bool>>? ToFilterExpression<T>(this ODataQueryOptions<T> options,
             HandleNullPropagationOption handleNullPropagation = HandleNullPropagationOption.Default,
-            TimeZoneInfo timeZone = null)
+            TimeZoneInfo? timeZone = null)
         {
-            if (options is null || options.Filter is null && options.Search is null)
+            if (options is null || (options.Filter is null && options.Search is null))
             {
                 return null;
             }
 
             var parameter = Expression.Parameter(typeof(T), "$it");
 
-            Expression filterExpression = null;
+            Expression? filterExpression = null;
             if (options.Filter is not null)
             {
-                var raw = options.Filter.ToFilterExpression<T>(handleNullPropagation, timeZone);
+                var raw = options.Filter.ToFilterExpression<T>(handleNullPropagation, timeZone)!;
                 filterExpression = raw.Body.ReplaceParameter(raw.Parameters[0], parameter);
             }
 
-            Expression searchExpression = null;
+            Expression? searchExpression = null;
             if (options.Search is not null)
             {
-                var raw = options.Search.ToSearchExpression<T>(handleNullPropagation, timeZone);
+                var raw = options.Search.ToSearchExpression<T>(handleNullPropagation, timeZone)!;
                 searchExpression = raw.Body.ReplaceParameter(raw.Parameters[0], parameter);
             }
 
-            Expression finalExpression = null;
+            Expression? finalExpression = null;
             if (filterExpression is not null && searchExpression is not null)
             {
                 finalExpression = Expression.AndAlso(searchExpression, filterExpression);
             }
 
             finalExpression ??= filterExpression ?? searchExpression;
-            return Expression.Lambda<Func<T, bool>>(finalExpression, parameter);
+            return Expression.Lambda<Func<T, bool>>(finalExpression!, parameter);
         }
 
         /// <summary>
