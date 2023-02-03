@@ -1,0 +1,8 @@
+<Project>
+  <PropertyGroup>
+    <Authors>BlaiseD</Authors>
+    <LangVersion>latest</LangVersion>
+    <WarningsAsErrors>true</WarningsAsErrors>
+    <NoWarn>$(NoWarn);1701;1702;1591</NoWarn>
+  </PropertyGroup>
+</Project>
