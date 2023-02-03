@@ -2,11 +2,8 @@
 
 using Microsoft.AspNetCore.OData.Query;
 using Microsoft.OData.Edm;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
-namespace AutoMapper.AspNet.OData
+namespace CosmosQuery
 {
     internal static class ODataQueryContextExtentions
     {

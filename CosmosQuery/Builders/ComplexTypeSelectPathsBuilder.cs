@@ -1,14 +1,9 @@
-﻿#nullable enable
-
-using AutoMapper;
+﻿using AutoMapper;
 using LogicBuilder.Expressions.Utils;
 using Microsoft.OData.Edm;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 
-namespace AutoMapper.AspNet.OData;
+namespace CosmosQuery;
 
 internal static class ComplexTypeSelectPathsBuilder
 {

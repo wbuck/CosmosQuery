@@ -1,4 +1,4 @@
-﻿namespace AutoMapper.AspNet.OData
+﻿namespace CosmosQuery
 {
     internal class OrderBySetting
     {

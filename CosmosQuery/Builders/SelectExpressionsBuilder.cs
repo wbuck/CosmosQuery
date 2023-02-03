@@ -1,15 +1,10 @@
-﻿#nullable enable
-
-using System;
-using System.Collections.Generic;
-using System.Globalization;
+﻿using System.Globalization;
 using System.Linq.Expressions;
-using System.Linq;
 using LogicBuilder.Expressions.Utils;
 using AutoMapper.Internal;
 
 
-namespace AutoMapper.AspNet.OData;
+namespace CosmosQuery;
 
 internal static class SelectExpressionsBuilder
 {

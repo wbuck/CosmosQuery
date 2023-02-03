@@ -1,12 +1,9 @@
 ﻿using LogicBuilder.Expressions.Utils;
 using Microsoft.AspNetCore.OData.Query;
-using System;
-using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Linq.Expressions;
 
-namespace AutoMapper.AspNet.OData.Visitors
+namespace CosmosQuery.Visitors
 {
     internal abstract class VisitorBase : ExpressionVisitor
     {

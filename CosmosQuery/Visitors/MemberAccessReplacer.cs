@@ -1,7 +1,6 @@
-﻿using System;
-using System.Linq.Expressions;
+﻿using System.Linq.Expressions;
 
-namespace AutoMapper.AspNet.OData.Visitors
+namespace CosmosQuery.Visitors
 {
     internal sealed class MemberAccessReplacer : ExpressionVisitor
     {

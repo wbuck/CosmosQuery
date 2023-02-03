@@ -3,12 +3,9 @@
 using LogicBuilder.Expressions.Utils;
 using Microsoft.AspNetCore.OData.Query;
 using Microsoft.OData.UriParser;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
 
-namespace AutoMapper.AspNet.OData.Visitors
+namespace CosmosQuery.Visitors
 {
     internal sealed class QueryMethodInserter : ExpressionVisitor
     {

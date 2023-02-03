@@ -1,14 +1,9 @@
-﻿using AutoMapper.OData.Cosmos.Tests.Data;
-using AutoMapper.OData.Cosmos.Tests.Entities;
-using DotNet.Testcontainers.Builders;
+﻿using DotNet.Testcontainers.Builders;
 using DotNet.Testcontainers.Configurations;
 using DotNet.Testcontainers.Containers;
 using Microsoft.Azure.Cosmos;
-using Microsoft.Azure.Cosmos.Fluent;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Serialization;
-using Xunit;
 
 namespace AutoMapper.OData.Cosmos.Tests.Persistence;
 

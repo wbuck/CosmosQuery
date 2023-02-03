@@ -1,6 +1,6 @@
 ﻿using System.Linq.Expressions;
 
-namespace AutoMapper.AspNet.OData.Visitors
+namespace CosmosQuery.Visitors
 {
     internal class ParameterReplacer : ExpressionVisitor
     {

@@ -1,12 +1,13 @@
-﻿using AutoMapper.AspNet.OData.Visitors;
+﻿using AutoMapper;
 using AutoMapper.Extensions.ExpressionMapping;
+using CosmosQuery.Visitors;
 using LogicBuilder.Expressions.Utils;
 using Microsoft.AspNetCore.OData.Query;
 using Microsoft.Azure.Cosmos.Linq;
 using System.Linq.Expressions;
 using System.Runtime.InteropServices;
 
-namespace AutoMapper.AspNet.OData;
+namespace CosmosQuery;
 
 public static class QueryableExtensions
 {
@@ -39,7 +40,7 @@ public static class QueryableExtensions
         mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         options = options ?? throw new ArgumentNullException(nameof(options));
 
-        Expression<Func<TModel, bool>> filter = options.ToFilterExpression(
+        Expression<Func<TModel, bool>>? filter = options.ToFilterExpression(
             querySettings?.ODataSettings?.HandleNullPropagation ?? HandleNullPropagationOption.False,
             querySettings?.ODataSettings?.TimeZone);
 
@@ -61,7 +62,7 @@ public static class QueryableExtensions
         mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         options = options ?? throw new ArgumentNullException(nameof(options));
 
-        Expression<Func<TModel, bool>> filter = options.ToFilterExpression(
+        Expression<Func<TModel, bool>>? filter = options.ToFilterExpression(
             querySettings?.ODataSettings?.HandleNullPropagation ?? HandleNullPropagationOption.False,
             querySettings?.ODataSettings?.TimeZone);
 
@@ -74,8 +75,8 @@ public static class QueryableExtensions
     private static IQueryable<TModel> GetQueryable<TModel, TData>(this IQueryable<TData> query,
             IMapper mapper,
             ODataQueryOptions<TModel> options,
-            QuerySettings querySettings,
-            Expression<Func<TModel, bool>> filter)
+            QuerySettings? querySettings,
+            Expression<Func<TModel, bool>>? filter)
             where TModel : class
     {
         var selects = options.GetSelects();
@@ -144,7 +145,7 @@ public static class QueryableExtensions
     }
 
     private static void ApplyCountQuery<TModel, TData>(this IQueryable<TData> query,
-        IMapper mapper, Expression<Func<TModel, bool>> filter, ODataQueryOptions<TModel> options)
+        IMapper mapper, Expression<Func<TModel, bool>>? filter, ODataQueryOptions<TModel> options)
     {
         if (options.Count?.Value == true)
         {
@@ -156,7 +157,7 @@ public static class QueryableExtensions
     }
 
     private static int QueryCount<TModel, TData>(this IQueryable<TData> query, 
-        IMapper mapper, Expression<Func<TModel, bool>> filter)
+        IMapper mapper, Expression<Func<TModel, bool>>? filter)
     {
         if (filter is not null)
         {
@@ -170,9 +171,9 @@ public static class QueryableExtensions
 
     private static async Task ApplyCountQueryAsync<TModel, TData>(this IQueryable<TData> query,
         IMapper mapper, 
-        Expression<Func<TModel, bool>> filter,
+        Expression<Func<TModel, bool>>? filter,
         ODataQueryOptions<TModel> options,
-        QuerySettings querySettings)
+        QuerySettings? querySettings)
     {
         if (options.Count?.Value == true)
         {
@@ -186,7 +187,7 @@ public static class QueryableExtensions
 
     private static async Task<int> QueryCountAsync<TModel, TData>(this IQueryable<TData> query, 
         IMapper mapper, 
-        Expression<Func<TModel, bool>> filter, 
+        Expression<Func<TModel, bool>>? filter, 
         CancellationToken cancellationToken = default)
     {
         if (filter is not null)
@@ -209,7 +210,7 @@ public static class QueryableExtensions
         ).Resource.ToArray();
     }
 
-    private static void ApplyOptions<TModel>(ODataQueryOptions<TModel> options, QuerySettings querySettings)
+    private static void ApplyOptions<TModel>(ODataQueryOptions<TModel> options, QuerySettings? querySettings)
     {
         options.AddExpandOptionsResult();
         if (querySettings?.ODataSettings?.PageSize.HasValue == true)
@@ -270,6 +271,6 @@ public static class QueryableExtensions
         }
     }
 
-    private static CancellationToken GetCancellationToken(this QuerySettings querySettings) =>
+    private static CancellationToken GetCancellationToken(this QuerySettings? querySettings) =>
         querySettings?.AsyncSettings?.CancellationToken ?? CancellationToken.None;
 }

@@ -1,7 +1,6 @@
 ﻿using Microsoft.OData.Edm;
-using System;
 
-namespace AutoMapper.AspNet.OData
+namespace CosmosQuery
 {
     public struct EdmTypeStructure : IEquatable<EdmTypeStructure>
     {

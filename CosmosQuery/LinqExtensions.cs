@@ -1,15 +1,12 @@
-﻿using AutoMapper.AspNet.OData.Visitors;
+﻿using CosmosQuery.Visitors;
 using LogicBuilder.Expressions.Utils;
 using LogicBuilder.Expressions.Utils.Expansions;
 using Microsoft.AspNetCore.OData.Query;
 using Microsoft.OData.UriParser;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 
-namespace AutoMapper.AspNet.OData
+namespace CosmosQuery
 {
     public static class LinqExtensions
     {
@@ -108,7 +105,7 @@ namespace AutoMapper.AspNet.OData
         /// <param name="options"></param>
         /// <param name="oDataSettings"></param>
         /// <returns></returns>
-        public static Expression<Func<IQueryable<T>, IQueryable<T>>> GetQueryableExpression<T>(this ODataQueryOptions<T> options, ODataSettings oDataSettings = null)
+        public static Expression<Func<IQueryable<T>, IQueryable<T>>>? GetQueryableExpression<T>(this ODataQueryOptions<T> options, ODataSettings? oDataSettings = null)
         {
             if (NoQueryableMethod(options, oDataSettings))
                 return null;
@@ -121,10 +118,10 @@ namespace AutoMapper.AspNet.OData
             );
         }
 
-        public static Expression GetOrderByMethod<T>(this Expression expression,
-            ODataQueryOptions<T> options, ODataSettings oDataSettings = null)
+        public static Expression? GetOrderByMethod<T>(this Expression expression,
+            ODataQueryOptions<T> options, ODataSettings? settings = null)
         {
-            if (NoQueryableMethod(options, oDataSettings))
+            if (NoQueryableMethod(options, settings))
                 return null;
 
             return expression.GetQueryableMethod
@@ -138,17 +135,17 @@ namespace AutoMapper.AspNet.OData
 
             int? GetPageSize()
             {
-                if (oDataSettings?.PageSize == null && options.Top == null)
+                if (settings?.PageSize == null && options.Top == null)
                     return null;
 
                 if (options.Top == null)
-                    return oDataSettings.PageSize;
-                else if (oDataSettings?.PageSize == null)
+                    return settings.PageSize;
+                else if (settings?.PageSize == null)
                     return options.Top.Value;
 
-                return options.Top.Value < oDataSettings.PageSize
+                return options.Top.Value < settings.PageSize
                     ? options.Top.Value
-                    : oDataSettings.PageSize;
+                    : settings.PageSize;
             }
         }
 
@@ -185,11 +182,11 @@ namespace AutoMapper.AspNet.OData
                 .GetTakeCall(top);
         }
 
-        private static bool NoQueryableMethod(ODataQueryOptions options, ODataSettings oDataSettings)
+        private static bool NoQueryableMethod(ODataQueryOptions options, ODataSettings? settings)
             => options.OrderBy is null
             && options.Top is null
             && options.Skip is null
-            && oDataSettings?.PageSize is null;
+            && settings?.PageSize is null;
 
         private static Expression GetPrimitiveThenByCall(this Expression expression, OrderByClause orderByClause)
         {

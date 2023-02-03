@@ -1,15 +1,10 @@
-﻿#nullable enable
-
-using AutoMapper.AspNet.OData.Visitors;
-using AutoMapper.Internal;
+﻿using AutoMapper.Internal;
+using CosmosQuery.Visitors;
 using Microsoft.AspNetCore.OData.Query;
 using Microsoft.OData.UriParser;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
 
-namespace AutoMapper.AspNet.OData;
+namespace CosmosQuery;
 internal static class ExpressionExt
 {   
     public static Expression? GetQueryableExpression(this Expression expression, IReadOnlyList<PathSegment> pathSegments, QueryOptions options, ODataQueryContext context)

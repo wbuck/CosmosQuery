@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
+﻿using System.Reflection;
 
-namespace AutoMapper.AspNet.OData
+namespace CosmosQuery
 {
     public static class CustomMethodCache
     {

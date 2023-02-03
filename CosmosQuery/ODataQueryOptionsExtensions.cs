@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.OData.Extensions;
 using Microsoft.AspNetCore.OData.Query;
 
-namespace AutoMapper.AspNet.OData
+namespace CosmosQuery
 {
     internal static class ODataQueryOptionsExtensions
     {

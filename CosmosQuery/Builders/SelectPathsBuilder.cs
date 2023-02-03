@@ -1,17 +1,10 @@
-﻿#nullable enable
-
-using LogicBuilder.Expressions.Utils;
-using Microsoft.AspNetCore.Http;
+﻿using LogicBuilder.Expressions.Utils;
 using Microsoft.AspNetCore.OData.Query;
 using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics.Eventing.Reader;
-using System.Linq;
 using System.Reflection;
 
-namespace AutoMapper.AspNet.OData;
+namespace CosmosQuery;
 
 internal static class SelectPathsBuilder
 {

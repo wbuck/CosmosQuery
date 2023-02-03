@@ -1,9 +1,8 @@
 ﻿using LogicBuilder.Expressions.Utils;
 using Microsoft.AspNetCore.OData.Query;
-using System;
 using System.Linq.Expressions;
 
-namespace AutoMapper.AspNet.OData.Visitors
+namespace CosmosQuery.Visitors
 {
     internal class MethodAppender : ExpressionVisitor
     {

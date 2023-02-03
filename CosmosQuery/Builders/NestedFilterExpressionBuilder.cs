@@ -1,14 +1,9 @@
-﻿#nullable enable
-
-using LogicBuilder.Expressions.Utils;
+﻿using LogicBuilder.Expressions.Utils;
 using Microsoft.AspNetCore.OData.Query;
 using Microsoft.OData.UriParser;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
 
-namespace AutoMapper.AspNet.OData;
+namespace CosmosQuery;
 internal static class NestedFilterExpressionBuilder
 {
     public static LambdaExpression GenerateFilterExpression(this FilterClause filterClause, Type type, ODataQueryContext context)

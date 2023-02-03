@@ -1,5 +1,5 @@
 ﻿//Adapted from Microsoft.AspNet.OData.Test.Query.Expressions.FilterBinderTests
-using AutoMapper.AspNet.OData;
+using CosmosQuery;
 using ExpressionBuilder.Tests.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;

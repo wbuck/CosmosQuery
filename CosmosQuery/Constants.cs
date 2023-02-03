@@ -1,10 +1,7 @@
 ﻿using Microsoft.OData.Edm;
 using Microsoft.Spatial;
-using System;
-using System.Collections.Generic;
-using System.IO;
 
-namespace AutoMapper.AspNet.OData
+namespace CosmosQuery
 {
     internal static class Constants
     {

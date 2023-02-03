@@ -2,11 +2,9 @@
 
 using LogicBuilder.Expressions.Utils;
 using Microsoft.OData.Edm;
-using System;
-using System.Collections.Generic;
 using System.Reflection;
 
-namespace AutoMapper.AspNet.OData;
+namespace CosmosQuery;
 
 internal record struct PathSegment
 {

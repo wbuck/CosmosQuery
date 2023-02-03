@@ -1,5 +1,4 @@
 ﻿using AutoMapper.OData.Cosmos.Tests.Data;
-using AutoMapper.OData.Cosmos.Tests.Entities;
 using Microsoft.Azure.Cosmos;
 
 namespace AutoMapper.OData.Cosmos.Tests.Persistence;

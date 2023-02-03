@@ -1,12 +1,9 @@
 ﻿using LogicBuilder.Expressions.Utils;
 using Microsoft.AspNetCore.OData.Query;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
 using System.Runtime.InteropServices;
 
-namespace AutoMapper.AspNet.OData.Visitors
+namespace CosmosQuery.Visitors
 {
     internal sealed class QueryMethodAppender : VisitorBase
     {

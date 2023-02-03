@@ -1,5 +1,4 @@
 ﻿using AutoMapper.OData.Cosmos.Tests.Entities;
-using System.Linq.Expressions;
 
 namespace AutoMapper.OData.Cosmos.Tests.Data;
 

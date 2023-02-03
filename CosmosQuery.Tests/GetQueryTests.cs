@@ -1,14 +1,13 @@
-﻿using AutoMapper.AspNet.OData;
-using AutoMapper.OData.Cosmos.Tests.Entities;
+﻿using AutoMapper.OData.Cosmos.Tests.Entities;
 using AutoMapper.OData.Cosmos.Tests.Infrastructure;
 using AutoMapper.OData.Cosmos.Tests.Mappings;
 using AutoMapper.OData.Cosmos.Tests.Models;
 using AutoMapper.OData.Cosmos.Tests.Persistence;
+using CosmosQuery;
 using Microsoft.AspNetCore.OData;
 using Microsoft.AspNetCore.OData.Extensions;
 using Microsoft.AspNetCore.OData.Query;
 using Microsoft.Azure.Cosmos;
-using System.Diagnostics;
 using System.Text.Json;
 
 namespace AutoMapper.OData.Cosmos.Tests;

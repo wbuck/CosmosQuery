@@ -1,13 +1,10 @@
 ﻿#nullable enable
 
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 
-namespace AutoMapper.AspNet.OData;
+namespace CosmosQuery;
 internal class LinqMethods
 {
     private static readonly MethodInfo _queryableWhereMethod =

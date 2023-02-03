@@ -2,12 +2,9 @@
 using Microsoft.AspNetCore.OData.Edm;
 using Microsoft.OData.Edm;
 using Microsoft.OData.ModelBuilder;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 
-namespace AutoMapper.AspNet.OData
+namespace CosmosQuery
 {
     internal static class TypeExtensions
     {

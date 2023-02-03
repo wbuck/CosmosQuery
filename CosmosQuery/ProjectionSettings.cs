@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace AutoMapper.AspNet.OData
+﻿namespace CosmosQuery
 {
     /// <summary>
     /// Miscellaneous arguments for IMapper.ProjectTo

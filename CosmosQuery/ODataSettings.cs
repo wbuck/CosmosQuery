@@ -1,8 +1,7 @@
 ﻿using Microsoft.AspNetCore.OData.Query;
-using System;
 
 
-namespace AutoMapper.AspNet.OData
+namespace CosmosQuery
 {
     /// <summary>
     /// Settings for configuring OData options on the server
