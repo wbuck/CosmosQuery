@@ -35,6 +35,7 @@ using Microsoft.AspNetCore.OData.Query;
 using Microsoft.OData;
 using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
+using System.Diagnostics;
 using System.Linq.Expressions;
 using System.Reflection;
 
@@ -263,7 +264,7 @@ namespace CosmosQuery
             if (!(arguments[1] is ConstantNode typeNode))
                 throw new ArgumentException("Expected ConstantNode for type node.");
 
-            return IsOf(GetCastType(typeNode));
+            return IsOf(FilterHelper.GetCastType(typeNode));
 
             IExpressionPart IsOf(Type conversionType)
                 => new IsOfOperator(GetFilterPart(sourceNode), conversionType);
@@ -280,7 +281,7 @@ namespace CosmosQuery
             return Convert
             (
                 GetClrType(sourceNode.TypeReference),
-                GetCastType(typeNode)
+                FilterHelper.GetCastType(typeNode)
             );
 
             IExpressionPart Convert(Type operandType, Type conversionType)
@@ -316,7 +317,7 @@ namespace CosmosQuery
             return Convert
             (
                 GetClrType(sourceNode.TypeReference),
-                GetCastType(typeNode)
+                FilterHelper.GetCastType(typeNode)
             );
 
             IExpressionPart Convert(Type operandType, Type conversionType)
@@ -361,7 +362,7 @@ namespace CosmosQuery
             }
         }
 
-        private Type GetCastType(ConstantNode constantNode)
+        private static Type GetCastType(ConstantNode constantNode)
             => TypeExtensions.GetClrType((string)constantNode.Value, false, typesCache);
 
         private IExpressionPart GetCustomMehodFilterPart(string functionName, SingleValueNode[] arguments)
@@ -539,7 +540,7 @@ namespace CosmosQuery
             {
                 if (ShouldConvertTypes(memberType, fromEdmType, singleValuePropertyAccesNode))
                 {
-                    return ConvertNonStandardTypes
+                    return FilterHelper.ConvertNonStandardTypes
                     (
                         memberType,
                         fromEdmType,
@@ -566,7 +567,7 @@ namespace CosmosQuery
                 GetFilterPart(singleNavigationNode.Source)
             );
 
-        private IExpressionPart ConvertNonStandardTypes(Type sourceType, Type fromEdmType, IExpressionPart sourceFilterPart)
+        private static IExpressionPart ConvertNonStandardTypes(Type sourceType, Type fromEdmType, IExpressionPart sourceFilterPart)
         {
             return DoConvert(sourceType.ToNullableUnderlyingType());
             IExpressionPart DoConvert(Type sourceUnderlyingType)

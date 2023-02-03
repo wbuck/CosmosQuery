@@ -4,6 +4,7 @@ using CosmosQuery.Visitors;
 using LogicBuilder.Expressions.Utils;
 using Microsoft.AspNetCore.OData.Query;
 using Microsoft.Azure.Cosmos.Linq;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Runtime.InteropServices;
 
@@ -136,9 +137,11 @@ public static class QueryableExtensions
         if (filter is not null)
             query = query.Where(f);
 
-        return mappedQueryFunc is not null
+       IQueryable<TModel> queryable = mappedQueryFunc is not null
                 ? mapper.ProjectTo(mappedQueryFunc(query), projectionSettings?.Parameters, GetIncludes())
                 : mapper.ProjectTo(query, projectionSettings?.Parameters, GetIncludes());
+
+        return queryable;
 
         Expression<Func<TModel, object>>[] GetIncludes() => 
             includeProperties?.ToArray() ?? Array.Empty<Expression<Func<TModel, object>>>();

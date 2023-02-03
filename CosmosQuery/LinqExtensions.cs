@@ -508,12 +508,7 @@ namespace CosmosQuery
             return new FilterHelper(parameters, context)
                 .GetFilterPart(filterClause.Expression)
                 .GetFilter(type, parameters, filterClause.RangeVariable.Name);                
-        }
-
-        private static Expression Unquote(this Expression exp)
-            => exp.NodeType == ExpressionType.Quote
-                ? ((UnaryExpression)exp).Operand.Unquote()
-                : exp;
+        }        
 
         /// <summary>
         /// Creates a list of navigation expressions from the list of period delimited navigation properties.

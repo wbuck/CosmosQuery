@@ -28,7 +28,12 @@ internal static class ExpressionExt
             memberExpression,
             parameter
         );
-    }        
+    }
+
+    public static Expression Unquote(this Expression exp)
+        => exp.NodeType == ExpressionType.Quote
+            ? ((UnaryExpression)exp).Operand.Unquote()
+            : exp;
 
     private static string GetPropertyPath(this SingleValueNode node) => node switch
     {

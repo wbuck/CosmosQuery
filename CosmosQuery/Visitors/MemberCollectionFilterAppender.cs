@@ -47,30 +47,77 @@ namespace CosmosQuery.Visitors
             FilterAppender.AppendFilter(callExpression, pathSegment, this.context);
 
         private Expression GetBindingExpression(MemberAssignment memberAssignment, FilterClause clause)
-        {
+        {            
             Type memberType = memberAssignment.Member.GetMemberType();
             Type elementType = memberType.GetCurrentType();
 
-            MethodCallExpression callExpression = Expression.Call
-            (
-                LinqMethods.EnumerableWhereMethod.MakeGenericMethod(elementType),
-                memberAssignment.Expression,
-                clause.GenerateFilterExpression(elementType, this.context)
-            );
+            LambdaExpression lambdaExpression = clause.GenerateFilterExpression(elementType, this.context);
 
-            return memberType.IsArray
-                ? callExpression.ToArrayCall(elementType)
-                : callExpression.ToListCall(elementType);
+            return memberAssignment.Expression.NodeType switch
+            {
+                ExpressionType.Convert => GetConvertedCallExpression
+                (
+                    lambdaExpression, 
+                    (UnaryExpression)memberAssignment.Expression
+                ),
+                _ => GetCallExpression()
+            };
+
+            Expression GetCallExpression()
+            {
+                MethodCallExpression callExpression = GetWhereCallExpression
+                (
+                    elementType, 
+                    lambdaExpression, 
+                    memberAssignment.Expression
+                );
+                return memberType.IsArray
+                    ? callExpression.ToArrayCall(elementType)
+                    : callExpression.ToListCall(elementType);
+            }
         }
 
-        private static ODataExpansionOptions ToExpansion(in PathSegment pathSegment) =>
-            new()
-            {
-                MemberName = pathSegment.MemberName,
-                MemberType = pathSegment.MemberType,
-                ParentType = pathSegment.ParentType,
-                FilterOptions = pathSegment.FilterOptions,
-                QueryOptions = pathSegment.QueryOptions
-            };        
+        // If the member assignment is a convert expression (E.g., Convert(Collection, CollectionModel[]))
+        // then we need to rearrange the expression as the Cosmos DB provider throws an error
+        // if we attempt to append a where clause after the conversion (E.g., Convert(Collection, CollectionModel[]).Where(...)).
+        // Instead rearrage the conversion to the following: 
+        // Convert(Collection.Where(it => (Convert(it, Model) == Value).ToArray(), CollectionModel[]).
+        private static Expression GetConvertedCallExpression(LambdaExpression lambdaExpression, UnaryExpression unaryExpression)
+        {
+            Type destinationType = unaryExpression.Type.GetCurrentType();
+            Type sourceType = unaryExpression.Operand.Type.GetCurrentType();
+
+            ParameterExpression originalParameter = lambdaExpression.Parameters[0];
+
+            ParameterExpression newParameter = Expression.Parameter(sourceType, originalParameter.Name);
+            Expression body = lambdaExpression.Body.ReplaceParameter
+            (
+                originalParameter,
+                Expression.Convert(newParameter, destinationType)
+            );
+
+            lambdaExpression = Expression.Lambda(body, newParameter);
+
+            MethodCallExpression callExpression = GetWhereCallExpression
+            (
+                sourceType,
+                lambdaExpression,
+                unaryExpression.Operand                
+            );
+
+            callExpression = unaryExpression.Type.IsArray
+                ? callExpression.ToArrayCall(sourceType)
+                : callExpression.ToListCall(sourceType);
+
+            return Expression.Convert(callExpression, unaryExpression.Type);
+        }
+
+        private static MethodCallExpression GetWhereCallExpression(Type elementType, LambdaExpression lambdaExpression, Expression expression)
+            => Expression.Call
+               (
+                   LinqMethods.EnumerableWhereMethod.MakeGenericMethod(elementType),
+                   expression,
+                   lambdaExpression
+               );
     }
 }

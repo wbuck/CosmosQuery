@@ -185,6 +185,36 @@ public sealed class GetQuerySelectTests
         }
     }
 
+    [Fact]
+    public async Task ForestModel_ExpandNestedEntity_NestedSelectCollectionOfEnums_ShouldReturnDcsWithOnlyFsmoRolesExpanded()
+    {
+        const string query = "/forest?$expand=DomainControllers/Entry/Dc($select=FsmoRoles)";
+        Test(Get<ForestModel, Forest>(query));
+        Test(await GetAsync<ForestModel, Forest>(query));
+        Test(await GetUsingCustomNameSpace<ForestModel, Forest>(query));
+
+        static void Test(ICollection<ForestModel> collection)
+        {
+            Assert.Equal(3, collection.Count);
+            Assert.All(collection, m => 
+            {
+                foreach (var dc in m.DomainControllers.Select(e => e.Entry.Dc))
+                {
+                    Assert.NotEmpty(dc.FsmoRoles);
+                    Assert.Equal(default, dc.Id);
+                    Assert.Equal(default, dc.ForestId);
+                    Assert.Equal(default, dc.Status);
+                    Assert.Null(dc.FullyQualifiedDomainName);
+                    Assert.Null(dc.Metadata);
+                    Assert.Null(dc.SelectedBackup);
+                    Assert.Null(dc.AdminGroup);
+                    Assert.Empty(dc.Attributes);
+                    Assert.Empty(dc.Backups);
+                }
+            });
+        }
+    }
+
     [Theory]
     [InlineData("/forest?$top=1&$select=DomainControllers/Entry/Dc, ForestName&$expand=DomainControllers/Entry/Dc&$orderby=ForestName desc")]
     [InlineData("/forest?$top=1&$select=DomainControllers/Entry($select=Dc), ForestName&$expand=DomainControllers/Entry/Dc&$orderby=ForestName desc")]
