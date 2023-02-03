@@ -137,11 +137,9 @@ public static class QueryableExtensions
         if (filter is not null)
             query = query.Where(f);
 
-       IQueryable<TModel> queryable = mappedQueryFunc is not null
-                ? mapper.ProjectTo(mappedQueryFunc(query), projectionSettings?.Parameters, GetIncludes())
-                : mapper.ProjectTo(query, projectionSettings?.Parameters, GetIncludes());
-
-        return queryable;
+       return mappedQueryFunc is not null
+            ? mapper.ProjectTo(mappedQueryFunc(query), projectionSettings?.Parameters, GetIncludes())
+            : mapper.ProjectTo(query, projectionSettings?.Parameters, GetIncludes());
 
         Expression<Func<TModel, object>>[] GetIncludes() => 
             includeProperties?.ToArray() ?? Array.Empty<Expression<Func<TModel, object>>>();

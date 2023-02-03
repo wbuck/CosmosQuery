@@ -518,21 +518,7 @@ namespace CosmosQuery
         /// <returns></returns>
         public static IEnumerable<Expression<Func<TSource, object>>> BuildIncludes<TSource>(this IEnumerable<string> includes)
             where TSource : class
-            => includes.Select(include => BuildSelectorExpression<TSource>(include)).ToList();
-
-        internal static MethodCallExpression ToListCall(this Expression expression, Type elementType) =>
-            Expression.Call
-            (  
-                LinqMethods.EnumerableToListMethod.MakeGenericMethod(elementType),
-                expression
-            );
-
-        internal static MethodCallExpression ToArrayCall(this Expression expression, Type elementType) =>
-            Expression.Call
-            (
-                LinqMethods.EnumerableToArrayMethod.MakeGenericMethod(elementType),
-                expression
-            );
+            => includes.Select(include => BuildSelectorExpression<TSource>(include)).ToList();        
 
         private static Expression<Func<TSource, object>> BuildSelectorExpression<TSource>(string fullName, string parameterName = "i")
         {

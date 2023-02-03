@@ -35,6 +35,21 @@ internal static class ExpressionExt
             ? ((UnaryExpression)exp).Operand.Unquote()
             : exp;
 
+    public static MethodCallExpression ToListCall(this Expression expression, Type elementType) 
+        => Expression.Call
+           (
+               LinqMethods.EnumerableToListMethod.MakeGenericMethod(elementType),
+               expression
+           );
+
+
+    public static MethodCallExpression ToArrayCall(this Expression expression, Type elementType) 
+        => Expression.Call
+           (
+               LinqMethods.EnumerableToArrayMethod.MakeGenericMethod(elementType),
+               expression
+           );
+
     private static string GetPropertyPath(this SingleValueNode node) => node switch
     {
         CountNode countNode => countNode.GetPropertyPath(),

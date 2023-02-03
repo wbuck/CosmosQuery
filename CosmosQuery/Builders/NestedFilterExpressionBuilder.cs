@@ -9,12 +9,10 @@ internal static class NestedFilterExpressionBuilder
     public static LambdaExpression GenerateFilterExpression(this FilterClause filterClause, Type type, ODataQueryContext context)
     {
         var parameters = new Dictionary<string, ParameterExpression>();
-        var expr = new FilterHelper(parameters, context)
+        return new FilterHelper(parameters, context)
             .GetFilterPart(filterClause.Expression)
             .GetFilter(type, parameters, filterClause.RangeVariable.Name)
-            .ReplaceParameter();
-
-        return expr;
+            .ReplaceParameter();        
     }
 
     // Parameters that start with the '$' character are illegal
