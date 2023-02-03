@@ -1,7 +1,7 @@
-﻿using AutoMapper.OData.Cosmos.Tests.Data;
+﻿using CosmosQuery.Tests.Data;
 using Microsoft.Azure.Cosmos;
 
-namespace AutoMapper.OData.Cosmos.Tests.Persistence;
+namespace CosmosQuery.Tests.Persistence;
 
 internal static class ContainerExtensions
 {

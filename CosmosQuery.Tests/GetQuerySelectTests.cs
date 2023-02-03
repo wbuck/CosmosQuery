@@ -1,13 +1,14 @@
-﻿using AutoMapper.OData.Cosmos.Tests.Entities;
-using AutoMapper.OData.Cosmos.Tests.Infrastructure;
-using AutoMapper.OData.Cosmos.Tests.Mappings;
-using AutoMapper.OData.Cosmos.Tests.Models;
-using AutoMapper.OData.Cosmos.Tests.Persistence;
-using CosmosQuery;
+﻿using AutoMapper;
+using CosmosQuery.Tests.Entities;
+using CosmosQuery.Tests.Infrastructure;
+using CosmosQuery.Tests.Mappings;
+using CosmosQuery.Tests.Models;
+using CosmosQuery.Tests.Persistence;
 using Microsoft.AspNetCore.OData;
 using Microsoft.AspNetCore.OData.Query;
+using IConfigurationProvider = AutoMapper.IConfigurationProvider;
 
-namespace AutoMapper.OData.Cosmos.Tests;
+namespace CosmosQuery.Tests;
 
 
 [Collection(nameof(CosmosContainer))]

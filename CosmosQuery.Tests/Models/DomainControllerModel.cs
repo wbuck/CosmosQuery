@@ -1,6 +1,4 @@
-﻿using AutoMapper.OData.Cosmos.Tests.Entities;
-
-namespace AutoMapper.OData.Cosmos.Tests.Models;
+﻿namespace CosmosQuery.Tests.Models;
 
 public sealed record DomainControllerModel
 {
@@ -14,7 +12,7 @@ public sealed record DomainControllerModel
     public ICollection<BackupModel> Backups { get; init; } =
         new List<BackupModel>();
     public AdminGroupModel AdminGroup { get; init; } = default!;
-    public FsmoRole[] FsmoRoles { get; init; }
-        = Array.Empty<FsmoRole>();
+    public FsmoRoleModel[] FsmoRoles { get; init; }
+        = Array.Empty<FsmoRoleModel>();
     public DcStatusModel Status { get; init; }
 }

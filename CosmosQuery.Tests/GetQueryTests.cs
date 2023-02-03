@@ -1,16 +1,17 @@
-﻿using AutoMapper.OData.Cosmos.Tests.Entities;
-using AutoMapper.OData.Cosmos.Tests.Infrastructure;
-using AutoMapper.OData.Cosmos.Tests.Mappings;
-using AutoMapper.OData.Cosmos.Tests.Models;
-using AutoMapper.OData.Cosmos.Tests.Persistence;
-using CosmosQuery;
+﻿using AutoMapper;
+using CosmosQuery.Tests.Entities;
+using CosmosQuery.Tests.Infrastructure;
+using CosmosQuery.Tests.Mappings;
+using CosmosQuery.Tests.Models;
+using CosmosQuery.Tests.Persistence;
 using Microsoft.AspNetCore.OData;
 using Microsoft.AspNetCore.OData.Extensions;
 using Microsoft.AspNetCore.OData.Query;
 using Microsoft.Azure.Cosmos;
 using System.Text.Json;
+using IConfigurationProvider = AutoMapper.IConfigurationProvider;
 
-namespace AutoMapper.OData.Cosmos.Tests;
+namespace CosmosQuery.Tests;
 
 [Collection(nameof(CosmosContainer))]
 public sealed class GetQueryTests
@@ -883,7 +884,7 @@ public sealed class GetQueryTests
             Assert.Equal(2, collection.ElementAt(0).DomainControllers.Count);
             Assert.Single(collection.ElementAt(0).DomainControllers.ElementAt(0).Entry.Dc.FsmoRoles);
             Assert.Empty(collection.ElementAt(0).DomainControllers.ElementAt(1).Entry.Dc.FsmoRoles);
-            Assert.Equal(FsmoRole.RidMaster, collection.ElementAt(0).DomainControllers.ElementAt(0).Entry.Dc.FsmoRoles.Single());            
+            Assert.Equal(FsmoRoleModel.RidMaster, collection.ElementAt(0).DomainControllers.ElementAt(0).Entry.Dc.FsmoRoles.Single());            
         }
     }
 
@@ -902,8 +903,8 @@ public sealed class GetQueryTests
             Assert.Equal(2, collection.First().DomainControllers.Count);
             Assert.Single(collection.First().DomainControllers.First().Entry.Dc.FsmoRoles);
             Assert.Single(collection.First().DomainControllers.Last().Entry.Dc.FsmoRoles);
-            Assert.Contains(FsmoRole.RidMaster, collection.First().DomainControllers.First().Entry.Dc.FsmoRoles);
-            Assert.Contains(FsmoRole.DomainNamingMaster, collection.First().DomainControllers.Last().Entry.Dc.FsmoRoles);
+            Assert.Contains(FsmoRoleModel.RidMaster, collection.First().DomainControllers.First().Entry.Dc.FsmoRoles);
+            Assert.Contains(FsmoRoleModel.DomainNamingMaster, collection.First().DomainControllers.Last().Entry.Dc.FsmoRoles);
         }
     }
 
@@ -920,11 +921,11 @@ public sealed class GetQueryTests
         {
             Assert.Equal(3, collection.Count);
             Assert.Single(collection.ElementAt(0).DomainControllers);
-            Assert.Contains(FsmoRole.PdcEmulator, collection.ElementAt(0).DomainControllers.Single().Entry.Dc.FsmoRoles);
+            Assert.Contains(FsmoRoleModel.PdcEmulator, collection.ElementAt(0).DomainControllers.Single().Entry.Dc.FsmoRoles);
             Assert.Single(collection.ElementAt(1).DomainControllers);
-            Assert.Contains(FsmoRole.PdcEmulator, collection.ElementAt(1).DomainControllers.Single().Entry.Dc.FsmoRoles);
+            Assert.Contains(FsmoRoleModel.PdcEmulator, collection.ElementAt(1).DomainControllers.Single().Entry.Dc.FsmoRoles);
             Assert.Single(collection.ElementAt(2).DomainControllers);
-            Assert.Contains(FsmoRole.PdcEmulator, collection.ElementAt(2).DomainControllers.Single().Entry.Dc.FsmoRoles);
+            Assert.Contains(FsmoRoleModel.PdcEmulator, collection.ElementAt(2).DomainControllers.Single().Entry.Dc.FsmoRoles);
         }
     }
 
@@ -953,8 +954,8 @@ public sealed class GetQueryTests
             Assert.Contains(collection.ElementAt(2).DomainControllers.Last().Entry.Dc.FsmoRoles, ContainsRole);
         }
 
-        static bool ContainsRole(FsmoRole role) =>
-            role == FsmoRole.PdcEmulator || role == FsmoRole.SchemaMaster;
+        static bool ContainsRole(FsmoRoleModel role) =>
+            role == FsmoRoleModel.PdcEmulator || role == FsmoRoleModel.SchemaMaster;
     }
 
     [Fact]

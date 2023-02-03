@@ -1,9 +1,9 @@
-﻿using AutoMapper.OData.Cosmos.Tests.Models;
+﻿using CosmosQuery.Tests.Models;
 using Microsoft.AspNetCore.OData.Query.Expressions;
 using Microsoft.OData.UriParser;
 using System.Linq.Expressions;
 
-namespace AutoMapper.OData.Cosmos.Tests.Binder;
+namespace CosmosQuery.Tests.Binder;
 
 public sealed class ForestSearchBinder : QueryBinder, ISearchBinder
 {

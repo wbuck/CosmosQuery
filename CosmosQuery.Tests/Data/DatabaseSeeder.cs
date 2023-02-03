@@ -1,6 +1,6 @@
-﻿using AutoMapper.OData.Cosmos.Tests.Entities;
+﻿using CosmosQuery.Tests.Entities;
 
-namespace AutoMapper.OData.Cosmos.Tests.Data;
+namespace CosmosQuery.Tests.Data;
 
 internal static class DatabaseSeeder
 {

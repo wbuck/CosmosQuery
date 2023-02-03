@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace AutoMapper.OData.Cosmos.Tests.Entities;
+namespace CosmosQuery.Tests.Entities;
 
 public sealed record Forest : EntityBase
 {    

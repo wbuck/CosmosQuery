@@ -1,4 +1,4 @@
-﻿using AutoMapper.OData.Cosmos.Tests.Binder;
+﻿using CosmosQuery.Tests.Binder;
 using Microsoft.AspNetCore.OData;
 using Microsoft.AspNetCore.OData.Extensions;
 using Microsoft.AspNetCore.OData.Query;
@@ -7,7 +7,7 @@ using Microsoft.OData.Edm;
 using Microsoft.OData.ModelBuilder;
 using Microsoft.OData.UriParser;
 
-namespace AutoMapper.OData.Cosmos.Tests;
+namespace CosmosQuery.Tests;
 
 public static class ODataHelpers
 {

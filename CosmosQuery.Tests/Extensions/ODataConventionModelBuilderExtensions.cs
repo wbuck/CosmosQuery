@@ -1,6 +1,6 @@
 ﻿using Microsoft.OData.ModelBuilder;
 
-namespace AutoMapper.OData.Cosmos.Tests.Extensions;
+namespace CosmosQuery.Tests.Extensions;
 
 internal static class ODataConventionModelBuilderExtensions
 {

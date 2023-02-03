@@ -1,4 +1,4 @@
-﻿namespace AutoMapper.OData.Cosmos.Tests.Mappings;
+﻿namespace CosmosQuery.Tests.Mappings;
 
 internal interface IAssemablyMarker
 {}

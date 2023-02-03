@@ -1,4 +1,4 @@
-﻿namespace AutoMapper.OData.Cosmos.Tests.Models;
+﻿namespace CosmosQuery.Tests.Models;
 
 public sealed record EntryModel
 {

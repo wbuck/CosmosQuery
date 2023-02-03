@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc.ApplicationParts;
 
-namespace AutoMapper.OData.Cosmos.Tests.Infrastructure;
+namespace CosmosQuery.Tests.Infrastructure;
 
 internal sealed class TestMvcCoreBuilder : IMvcCoreBuilder
 {

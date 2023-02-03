@@ -5,7 +5,7 @@ using Microsoft.Azure.Cosmos;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 
-namespace AutoMapper.OData.Cosmos.Tests.Persistence;
+namespace CosmosQuery.Tests.Persistence;
 
 [CollectionDefinition(nameof(CosmosContainer))]
 public sealed class CosmosContainerFixture : ICollectionFixture<CosmosContainer>
