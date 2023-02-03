@@ -44,7 +44,7 @@ namespace CosmosQuery.Visitors
         }
 
         private Expression GetCallExpression(MethodCallExpression callExpression, in PathSegment pathSegment) =>
-            FilterAppender.AppendFilter(callExpression, ToExpansion(pathSegment), this.context);
+            FilterAppender.AppendFilter(callExpression, pathSegment, this.context);
 
         private Expression GetBindingExpression(MemberAssignment memberAssignment, FilterClause clause)
         {

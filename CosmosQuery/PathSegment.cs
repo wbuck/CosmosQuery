@@ -1,5 +1,4 @@
-﻿#nullable enable
-
+﻿
 using LogicBuilder.Expressions.Utils;
 using Microsoft.OData.Edm;
 using System.Reflection;

@@ -1,5 +1,4 @@
-﻿#nullable enable
-
+﻿
 using LogicBuilder.Expressions.Utils;
 using Microsoft.AspNetCore.OData.Query;
 using Microsoft.OData.UriParser;
