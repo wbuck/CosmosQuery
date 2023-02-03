@@ -58,7 +58,7 @@ public class MyController : ODataController
 
 And thats it, you're done. The query is mapped to your entitiy type before query execution.
 <br>
-The query results are then mapped back to your `DTO` type. This keeps your entities from begin publically exposed via the API.
+The query and results are correctly mapped to and from your `DTO` type(s) and your `Entity` type(s). This keeps your entities from beging publically exposed via the API.
 
 ## Functions
 
@@ -68,7 +68,7 @@ There are four main functions you can use depending on your usecase.
 -   `GetQuery` - Synchronously builds the `IQueryable` but does not execute it against the database
 -   `GetQueryAsync` - Asynchronously builds the `IQueryable` but does not execute it against the database
 
-<b>If you plan on using the synchronous versions of the functions above make sure if enabled synchronous execution:</b>
+<b>If you plan on using the synchronous versions of the functions above make sure you've enabled synchronous execution:</b>
 
 ```c#
 var container = _client.GetContainer("DatabaseID", "ContainerID");
