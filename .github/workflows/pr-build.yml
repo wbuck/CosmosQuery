@@ -17,7 +17,7 @@ jobs:
     steps:
     - name: Switch Docker Daemon to Linux
       shell: pwsh
-      run: $Env:ProgramFiles\Docker\Docker\DockerCli.exe -SwitchDaemon
+      run: ."$Env:ProgramFiles\Docker\Docker\DockerCli.exe" -SwitchDaemon
     - uses: actions/checkout@v3
     - name: Setup .NET
       uses: actions/setup-dotnet@v3
