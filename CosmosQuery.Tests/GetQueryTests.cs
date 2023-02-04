@@ -1128,6 +1128,4 @@ public sealed class GetQueryTests
             customNamespace
         );
     }
-
-
 }
