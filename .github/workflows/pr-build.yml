@@ -15,9 +15,9 @@ jobs:
     runs-on: windows-latest
 
     steps:
-    - name: Query Docker
+    - name: Switch Docker Daemon to Linux
       shell: pwsh
-      run: docker info
+      run: $Env:ProgramFiles\Docker\Docker\DockerCli.exe -SwitchLinuxEngine
     - uses: actions/checkout@v3
     - name: Setup .NET
       uses: actions/setup-dotnet@v3
