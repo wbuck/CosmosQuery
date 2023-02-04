@@ -91,8 +91,7 @@ public sealed class CosmosContainer : IAsyncLifetime
         {
             client.Dispose();
             throw;
-        }
-        
+        }        
         return client;
     }    
 }

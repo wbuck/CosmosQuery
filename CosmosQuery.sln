@@ -7,14 +7,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{0574DFF6-39C
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{3E35C7A6-722E-46FE-AFE0-2EFDF668DB44}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{049EE7D1-4ED4-46F4-945B-709D00C48807}"
-	ProjectSection(SolutionItems) = preProject
-		.github\workflows\ci.yml = .github\workflows\ci.yml
-		Directory.Build.props = Directory.Build.props
-		Pack_Push.ps1 = Pack_Push.ps1
-		.github\workflows\release.yml = .github\workflows\release.yml
-	EndProjectSection
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExpressionBuilder.Tests", "ExpressionBuilder.Tests\ExpressionBuilder.Tests.csproj", "{64E80DBD-A61B-42A0-A0DB-4F36921EB83B}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CosmosQuery", "CosmosQuery\CosmosQuery.csproj", "{9BC1AB23-433B-4026-98DC-B6D30141AD37}"
