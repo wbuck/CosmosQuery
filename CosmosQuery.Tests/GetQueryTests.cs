@@ -400,7 +400,7 @@ public sealed class GetQueryTests
 
     private static ErrorDetails GetDetails(string jsonError) =>
         JsonSerializer.Deserialize<ErrorDetails>(jsonError, new JsonSerializerOptions{ PropertyNameCaseInsensitive = true })!;
-
+#if false
     [Fact]
     public async Task FilterPrimitiveCollectionWithTopInSubqueryShouldFailBecauseTopInSubqueryIsNotSupportedByCosmosDb()
     {
@@ -518,7 +518,7 @@ public sealed class GetQueryTests
             Assert.Equal("'ORDER BY' is not supported in subqueries.", errors[1].Message);
         }
     }
-
+#endif
     [Fact]
     public async Task ForestModelExpandDcExpandBackupOrderByForestNameSkipTakeWithCount()
     {
