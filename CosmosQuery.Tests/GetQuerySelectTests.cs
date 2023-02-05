@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using CosmosQuery.Tests.Data.Entities;
 using CosmosQuery.Tests.Infrastructure;
-using CosmosQuery.Tests.Mappings;
+using CosmosQuery.Tests.Data.Mappings;
 using CosmosQuery.Tests.Data.Models;
 using Microsoft.AspNetCore.OData;
 using Microsoft.AspNetCore.OData.Query;
