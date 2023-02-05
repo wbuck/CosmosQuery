@@ -36,7 +36,6 @@ public sealed class CosmosContainer : IAsyncLifetime
         }
     }
 
-    //localhost:49162/_explorer/index.html
     public async Task InitializeAsync()
     {
         if (IsGithubAction())
@@ -89,7 +88,6 @@ public sealed class CosmosContainer : IAsyncLifetime
             AllowBulkExecution = true,
             SerializerOptions = new() { PropertyNamingPolicy = CosmosPropertyNamingPolicy.CamelCase }
         });
-
 
     private static async Task<CosmosClient> InitializeCosmosClientAsync(CosmosClient client, CancellationToken cancellationToken = default)
     {
