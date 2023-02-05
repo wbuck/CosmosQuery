@@ -13,12 +13,13 @@ public sealed class CosmosContainerFixture : ICollectionFixture<CosmosContainer>
 
 public sealed class CosmosContainer : IAsyncLifetime
 {
+    private const string CosmosKey = "C2y6yDjf5/R+ob0N8A7Cgv30VRDJIWEHLM+4QDU5DE2nQ9nDuVTqobD4b8mGGyPMbIZnqyMsEcaGQy67XIw/Jw==";
     private const string DatabaseId = "ForestDatabase";
     private const string ContainerId = "ForestContainer";
     private const string PartitionKey = "/forestId";
 
-    private readonly CosmosDbTestcontainer testContainer;
-    private readonly CosmosDbTestcontainerConfiguration configuration;
+    private readonly CosmosDbTestcontainer? testContainer;
+    private readonly CosmosDbTestcontainerConfiguration? configuration;
 
     private CosmosClient? client;
 
@@ -27,24 +28,41 @@ public sealed class CosmosContainer : IAsyncLifetime
         JsonConvert.DefaultSettings = () => new JsonSerializerSettings
         {
             ContractResolver = new CamelCasePropertyNamesContractResolver()
-            //Converters = new List<JsonConverter> { new StringEnumConverter() }
         };
 
-        this.configuration = new();
-        this.testContainer = new TestcontainersBuilder<CosmosDbTestcontainer>()
-            .WithDatabase(this.configuration)
-            .WithCleanUp(true)
-            .Build();
+        if (!IsGithubAction())
+        {
+            this.configuration = new();
+            this.testContainer = new TestcontainersBuilder<CosmosDbTestcontainer>()
+                .WithDatabase(this.configuration)
+                .WithCleanUp(true)
+                .Build();
+        }        
     }
 
     //localhost:49162/_explorer/index.html
     public async Task InitializeAsync()
     {
-        using var cts = new CancellationTokenSource(TimeSpan.FromMinutes(5));
-        await this.testContainer.StartAsync(cts.Token).ConfigureAwait(false);
+        if (IsGithubAction())
+        {
+            var client = CreateCosmosClient
+            (
+                "https://localhost:8081", 
+                CosmosKey
+            );
 
-        this.client = await CreateCosmosClientAsync(cts.Token).ConfigureAwait(false);
-    }
+            using var cts = new CancellationTokenSource(TimeSpan.FromMinutes(5));
+            this.client = await InitializeCosmosClientAsync(client, cts.Token).ConfigureAwait(false);
+        }
+        else
+        {
+            using var cts = new CancellationTokenSource(TimeSpan.FromMinutes(5));
+            await this.testContainer!.StartAsync(cts.Token).ConfigureAwait(false);
+
+            var client = CreateCosmosClient(this.testContainer.ConnectionString);
+            this.client = await InitializeCosmosClientAsync(client, cts.Token).ConfigureAwait(false);
+        }        
+    }    
 
     public Container GetContainer() =>
         this.client?.GetContainer(DatabaseId, ContainerId) 
@@ -52,21 +70,33 @@ public sealed class CosmosContainer : IAsyncLifetime
 
     public async Task DisposeAsync()
     {
-        await this.testContainer.DisposeAsync().ConfigureAwait(false);
-        this.configuration.Dispose();
+        if (!IsGithubAction())
+        {
+            await this.testContainer!.DisposeAsync().ConfigureAwait(false);
+            this.configuration!.Dispose();
+        }
+        this.client?.Dispose();
     }
 
-
-    private async Task<CosmosClient> CreateCosmosClientAsync(CancellationToken cancellationToken = default)
-    {
-        var client = new CosmosClient(testContainer.ConnectionString, new() 
+    private static CosmosClient CreateCosmosClient(string endpoint, string key) =>
+        new(endpoint, key, new()
         {
-            ConnectionMode = ConnectionMode.Gateway,
-            HttpClientFactory = () => this.testContainer.HttpClient,
-            AllowBulkExecution = true,           
+            AllowBulkExecution = true,
             SerializerOptions = new() { PropertyNamingPolicy = CosmosPropertyNamingPolicy.CamelCase }
         });
 
+    private CosmosClient CreateCosmosClient(string connectionString) =>
+        new(connectionString, new()
+        {
+            ConnectionMode = ConnectionMode.Gateway,
+            HttpClientFactory = () => this.testContainer!.HttpClient,
+            AllowBulkExecution = true,
+            SerializerOptions = new() { PropertyNamingPolicy = CosmosPropertyNamingPolicy.CamelCase }
+        });
+
+
+    private static async Task<CosmosClient> InitializeCosmosClientAsync(CosmosClient client, CancellationToken cancellationToken = default)
+    {
         try
         {
             var databaseResponse = await client
@@ -93,5 +123,8 @@ public sealed class CosmosContainer : IAsyncLifetime
             throw;
         }        
         return client;
-    }    
+    }
+
+    private static bool IsGithubAction() =>
+        Environment.GetEnvironmentVariable("GITHUB_ACTIONS") is not null;
 }
