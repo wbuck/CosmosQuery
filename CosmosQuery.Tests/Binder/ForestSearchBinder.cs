@@ -1,4 +1,4 @@
-﻿using CosmosQuery.Tests.Models;
+﻿using CosmosQuery.Tests.Data.Models;
 using Microsoft.AspNetCore.OData.Query.Expressions;
 using Microsoft.OData.UriParser;
 using System.Linq.Expressions;

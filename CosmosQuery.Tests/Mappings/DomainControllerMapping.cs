@@ -1,5 +1,5 @@
-﻿using CosmosQuery.Tests.Entities;
-using CosmosQuery.Tests.Models;
+﻿using CosmosQuery.Tests.Data.Entities;
+using CosmosQuery.Tests.Data.Models;
 
 namespace CosmosQuery.Tests.Mappings;
 

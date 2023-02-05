@@ -1,4 +1,4 @@
-﻿using CosmosQuery.Tests.Entities;
+﻿using CosmosQuery.Tests.Data.Entities;
 
 namespace CosmosQuery.Tests.Data;
 
