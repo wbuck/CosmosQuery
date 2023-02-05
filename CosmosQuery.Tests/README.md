@@ -1,0 +1,2 @@
+To run the integrations tests locally [Docker](https://www.docker.com/) must be installed.
+The library [Testcontainers](https://github.com/testcontainers/testcontainers-dotnet) will take care of starting the Cosmos DB container.
