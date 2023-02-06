@@ -7,14 +7,13 @@
   	<PackageId>CosmosQuery</PackageId>
   	<Description>Creates LINQ expressions from ODataQueryOptions and executes the query.</Description>
   	<PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-  	<PackageReleaseNotes>Supporting AutoMapper v12.</PackageReleaseNotes>
   	<PackageTags>linq expressions odata cosmosdb</PackageTags>
-  	<PackageIcon>icon.png</PackageIcon>
-  	<RepositoryUrl>https://github.com/AutoMapper/AutoMapper.Extensions.OData</RepositoryUrl>
-  	<PackageLicenseExpression>MIT</PackageLicenseExpression>
-  	<PackageProjectUrl>https://github.com/AutoMapper/AutoMapper.Extensions.OData</PackageProjectUrl>
-  	<AssemblyOriginatorKeyFile>..\AutoMapper.snk</AssemblyOriginatorKeyFile>
-  	<SignAssembly>true</SignAssembly>
+  	<!--<PackageIcon>icon.png</PackageIcon>-->
+  	<RepositoryUrl>https://github.com/wbuck/CosmosQuery</RepositoryUrl>
+	<PackageProjectUrl>https://github.com/wbuck/CosmosQuery</PackageProjectUrl>
+  	<PackageLicenseExpression>MIT</PackageLicenseExpression>  	
+  	<!--<AssemblyOriginatorKeyFile>..\Cert.snk</AssemblyOriginatorKeyFile>-->
+  	<SignAssembly>false</SignAssembly>
   	<MinVerTagPrefix>v</MinVerTagPrefix>
   	<PublishRepositoryUrl>true</PublishRepositoryUrl>
   	<IncludeSymbols>true</IncludeSymbols>
