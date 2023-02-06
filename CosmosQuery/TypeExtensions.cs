@@ -37,6 +37,9 @@ namespace CosmosQuery
             BindingFlags.FlattenHierarchy |
             BindingFlags.IgnoreCase;
 
+        private readonly static Lazy<IList<Type>> loadedType = new(
+            () => GetAllTypes(AppDomain.CurrentDomain.GetAssemblies().Distinct().ToList()));
+
         public static MemberInfo[] GetValueOrListOfValueTypeMembers(this Type parentType)
         {
             if (parentType.IsList())
@@ -110,35 +113,19 @@ namespace CosmosQuery
             throw new ArgumentException($"Cannot find CLT type for EDM type {edmTypeStructure.FullName}");
         }
 
-        public static Type GetClrType(IEdmTypeReference edmTypeReference, IEdmModel edmModel, IDictionary<EdmTypeStructure, Type> typesCache)
+        public static Type GetClrType(IEdmTypeReference edmTypeReference, IEdmModel edmModel)
         {
-            if (edmTypeReference == null)
+            if (edmTypeReference is null)
                 return typeof(object);
 
-            return edmModel.GetTypeMapper().GetClrType(edmModel, edmTypeReference, _AssemblyResolver);
+            return edmModel.GetTypeMapper().GetClrType(edmModel, edmTypeReference, AssemblyResolver);
         }
 
-        private static IAssemblyResolver _assemblyResolver;
-        private static IAssemblyResolver _AssemblyResolver
-        {
-            get
-            {
-                _assemblyResolver ??= new AssemblyResolver();
+        private static IAssemblyResolver AssemblyResolver { get; } 
+            = new Resolver();
 
-                return _assemblyResolver;
-            }
-        }
-
-        private static IList<Type> _loadedTypes = null;
-        public static IList<Type> LoadedTypes
-        {
-            get
-            {
-                _loadedTypes ??= GetAllTypes(AppDomain.CurrentDomain.GetAssemblies().Distinct().ToList());
-
-                return _loadedTypes;
-            }
-        }
+        public static IList<Type> LoadedTypes { get; } 
+            = loadedType.Value;
 
         public static IList<Type> GetAllTypes(List<Assembly> assemblies)
         {
@@ -165,7 +152,8 @@ namespace CosmosQuery
             }
         }
 
-        public static Dictionary<EdmTypeStructure, Type> GetEdmToClrTypeMappings() => Constants.EdmToClrTypeMappings;
+        public static Dictionary<EdmTypeStructure, Type> GetEdmToClrTypeMappings() 
+            => Constants.EdmToClrTypeMappings;
 
         public static bool IsListOfValueTypes(this MemberInfo memberInfo) =>
             memberInfo.GetMemberType().IsListOfValueTypes();
@@ -173,20 +161,13 @@ namespace CosmosQuery
         public static bool IsListOfValueTypes(this Type memberType) =>
             memberType.IsList() && memberType.GetUnderlyingElementType().IsLiteralType();
 
-        private class AssemblyResolver : IAssemblyResolver
+        private sealed class Resolver : IAssemblyResolver
         {
-            private List<Assembly> _assemblides;
-            public IEnumerable<Assembly> Assemblies
-            {
-                get
-                {
-                    if (_assemblides == null)
-                        _assemblides = AppDomain.CurrentDomain.GetAssemblies().Distinct().ToList();
+            private readonly Lazy<List<Assembly>> assemblies = new(() 
+                => AppDomain.CurrentDomain.GetAssemblies().Distinct().ToList());
 
-                    return _assemblides;
-                }
-            }
+            public IEnumerable<Assembly> Assemblies 
+                => this.assemblies.Value;
         }
-
     }
 }

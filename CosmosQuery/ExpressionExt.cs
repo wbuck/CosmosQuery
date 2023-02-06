@@ -7,7 +7,7 @@ using System.Linq.Expressions;
 namespace CosmosQuery;
 internal static class ExpressionExt
 {   
-    public static Expression? GetQueryableExpression(this Expression expression, IReadOnlyList<PathSegment> pathSegments, QueryOptions options, ODataQueryContext context)
+    public static Expression GetQueryableExpression(this Expression expression, IReadOnlyList<PathSegment> pathSegments, QueryOptions options, ODataQueryContext context)
         => QueryMethodInserter.Insert(pathSegments, options, context, expression);
 
     public static LambdaExpression GetSelector(this OrderByClause clause, IReadOnlyList<PathSegment> pathSegments)

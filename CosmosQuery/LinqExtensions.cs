@@ -105,7 +105,9 @@ namespace CosmosQuery
         /// <param name="options"></param>
         /// <param name="oDataSettings"></param>
         /// <returns></returns>
-        public static Expression<Func<IQueryable<T>, IQueryable<T>>>? GetQueryableExpression<T>(this ODataQueryOptions<T> options, ODataSettings? oDataSettings = null)
+        public static Expression<Func<IQueryable<T>, IQueryable<T>>>? GetQueryableExpression<T>(
+            this ODataQueryOptions<T> options, 
+            ODataSettings? oDataSettings = null)
         {
             if (NoQueryableMethod(options, oDataSettings))
                 return null;
@@ -118,12 +120,9 @@ namespace CosmosQuery
             );
         }
 
-        public static Expression? GetOrderByMethod<T>(this Expression expression,
+        public static Expression GetOrderByMethod<T>(this Expression expression,
             ODataQueryOptions<T> options, ODataSettings? settings = null)
         {
-            if (NoQueryableMethod(options, settings))
-                return null;
-
             return expression.GetQueryableMethod
             (
                 options.Context,
@@ -131,47 +130,30 @@ namespace CosmosQuery
                 typeof(T),
                 options.Skip?.Value,
                 GetPageSize()
-            );            
+            );
 
-            int? GetPageSize()
-            {
-                if (settings?.PageSize == null && options.Top == null)
-                    return null;
-
-                if (options.Top == null)
-                    return settings.PageSize;
-                else if (settings?.PageSize == null)
-                    return options.Top.Value;
-
-                return options.Top.Value < settings.PageSize
-                    ? options.Top.Value
-                    : settings.PageSize;
-            }
+            int? GetPageSize() => (settings?.PageSize, options.Top) switch
+            {                
+                (null, null) => null,
+                (null, TopQueryOption top) => top.Value,
+                (int size, null) => size,
+                (int size, TopQueryOption top) => Math.Min(top.Value, size)
+            };
         }
 
-        public static Expression? GetQueryableMethod(this Expression expression,
+        public static Expression GetQueryableMethod(this Expression expression,
             ODataQueryContext context, OrderByClause? orderByClause, Type type, int? skip, int? top)
         {
             if (orderByClause is null && skip is null && top is null)
-                return null;
+                return expression;
 
             if (orderByClause is null && (skip is not null || top is not null))
             {
-                if (type.IsLiteralType())
-                {
-                    return expression
-                        .GetPrimitiveOrderByCall(orderByClause)
-                        .GetSkipCall(skip)
-                        .GetTakeCall(top);
-                }
-
-                var orderBySettings = context.FindSortableProperties(type);
-
-                if (orderBySettings is null)
-                    return null;
+                expression = type.IsLiteralType()
+                    ? expression.GetPrimitiveOrderByCall(orderByClause)
+                    : expression.GetDefaultOrderByCall(context.FindSortableProperties(type));
 
                 return expression
-                    .GetDefaultOrderByCall(orderBySettings)
                     .GetSkipCall(skip)
                     .GetTakeCall(top);
             }
@@ -254,8 +236,11 @@ namespace CosmosQuery
                 expression.GetOrderByCall(settings.Name, nameof(Queryable.ThenBy));
         }
 
-        private static Expression GetDefaultOrderByCall(this Expression expression, OrderBySetting settings)
+        private static Expression GetDefaultOrderByCall(this Expression expression, OrderBySetting? settings)
         {
+            if (settings is null)
+                return expression;
+
             return settings.ThenBy is null
                 ? GetMethodCall()
                 : GetMethodCall().GetDefaultThenByCall(settings.ThenBy);

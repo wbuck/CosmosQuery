@@ -21,13 +21,40 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
  */
+using Microsoft.AspNetCore.OData.Query;
+
+
 namespace CosmosQuery
 {
     /// <summary>
-    /// Miscellaneous arguments for IMapper.ProjectTo
+    /// Settings for configuring OData options on the server
     /// </summary>
-    public class ProjectionSettings
+    public sealed record ODataSettings
     {
-        public object Parameters { get; set; }
+        /// <summary>
+        /// Gets or sets a value indicating how null propagation should
+        /// be handled during query composition.
+        /// </summary>
+        /// <value>
+        /// The default is <see cref="F:Microsoft.AspNet.OData.Query.HandleNullPropagationOption.Default" />.
+        /// </value>
+        public HandleNullPropagationOption HandleNullPropagation { get; init; } 
+            = HandleNullPropagationOption.Default;
+
+        /// <summary>
+        /// Gets or sets the maximum number of query results to return.
+        /// </summary>
+        /// <value>
+        /// The maximum number of query results to return, or null if there is no limit. Default is null.
+        /// </value>
+        public int? PageSize { get; init; }
+
+        /// <summary>
+        /// Gets of sets the <see cref="TimeZoneInfo"/>.
+        /// </summary>
+        /// <value>
+        /// Default is null.
+        /// </value>
+        public TimeZoneInfo? TimeZone { get; init; }
     }
 }
