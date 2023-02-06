@@ -367,8 +367,8 @@ namespace CosmosQuery
 
         private IExpressionPart GetCustomMehodFilterPart(string functionName, SingleValueNode[] arguments)
         {
-            MethodInfo methodInfo = CustomMethodCache.GetCachedCustomMethod(functionName, arguments.Select(p => GetClrType(p.TypeReference)));
-            if (methodInfo == null)
+            MethodInfo? methodInfo = CustomMethodCache.GetCachedCustomMethod(functionName, arguments.Select(p => GetClrType(p.TypeReference)));
+            if (methodInfo is null)
                 throw new NotImplementedException($"Unsupported SingleValueFunctionCall name - value: {functionName}");
 
             return new CustomMethodOperator
@@ -523,7 +523,7 @@ namespace CosmosQuery
         private Type GetClrType(IEdmTypeReference typeReference)
             => this.edmModel == null
                 ? TypeExtensions.GetClrType(typeReference, typesCache)
-                : TypeExtensions.GetClrType(typeReference, edmModel, typesCache);
+                : TypeExtensions.GetClrType(typeReference, edmModel);
 
         private IExpressionPart GetSingleValuePropertyAccessFilterPart(SingleValuePropertyAccessNode singleValuePropertyAccesNode)
         {

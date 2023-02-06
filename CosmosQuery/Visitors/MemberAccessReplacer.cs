@@ -19,10 +19,9 @@ namespace CosmosQuery.Visitors
         protected override Expression VisitMember(MemberExpression node)
         {
             if (node.NodeType == ExpressionType.MemberAccess 
-                && this.currentType == node.Expression.Type)
+                && this.currentType == node.Expression!.Type)
             {                
-                var expr = Expression.MakeMemberAccess(this.replacement, node.Member);
-                return expr;
+                return Expression.MakeMemberAccess(this.replacement, node.Member);
             }
             return base.VisitMember(node);
         }

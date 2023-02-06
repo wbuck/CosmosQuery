@@ -1,5 +1,6 @@
 ﻿using LogicBuilder.Expressions.Utils;
 using Microsoft.AspNetCore.OData.Query;
+using System.Diagnostics;
 using System.Linq.Expressions;
 using System.Runtime.InteropServices;
 
@@ -43,31 +44,33 @@ namespace CosmosQuery.Visitors
             Span<PathSegment> segments = CollectionsMarshal.AsSpan(this.pathSegments);
             ref PathSegment lastSegment = ref segments[^1];
 
+            Debug.Assert(lastSegment.QueryOptions is not null);
+
             Type elementType = this.collectionSegment.ElementType;
 
             Expression expression = binding.Expression.NodeType == ExpressionType.Call
-                ? GetCallExpression(binding.Expression, lastSegment)
-                : GetMemberAccessExpression(binding.Expression, lastSegment);            
+                ? GetCallExpression(binding.Expression, lastSegment.QueryOptions!)
+                : GetMemberAccessExpression(binding.Expression, lastSegment.QueryOptions!);            
 
             return expression;            
 
-            Expression GetCallExpression(Expression expression, in PathSegment segment) =>
+            Expression GetCallExpression(Expression expression, QueryOptions options) =>
                 expression.GetQueryableExpression
                 (
                     this.pathSegments, 
-                    segment.QueryOptions, 
+                    options, 
                     this.context
                 );
 
-            Expression GetMemberAccessExpression(Expression expression, in PathSegment segment)
+            Expression GetMemberAccessExpression(Expression expression, QueryOptions options)
             {
                 Expression queryExpression = expression.GetQueryableMethod
                 (
                     this.context,
-                    segment.QueryOptions.OrderByClause,
+                    options.OrderByClause,
                     elementType,
-                    segment.QueryOptions.Skip,
-                    segment.QueryOptions.Top
+                    options.Skip,
+                    options.Top
                 );
 
                 return queryExpression.Type.IsArray

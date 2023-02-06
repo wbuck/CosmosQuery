@@ -45,12 +45,8 @@ namespace CosmosQuery
         public bool Equals(EdmTypeStructure other)
             => this.FullName == other.FullName && this.IsNullable == other.IsNullable;
 
-        public override bool Equals(object obj)
-        {
-            if (!(obj is EdmTypeStructure typeDefinition)) return false;
-
-            return Equals(typeDefinition);
-        }
+        public override bool Equals(object? obj)
+            => obj is EdmTypeStructure type && Equals(type);
 
         public override int GetHashCode() => FullName.GetHashCode();
     }

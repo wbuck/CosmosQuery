@@ -40,9 +40,9 @@ namespace CosmosQuery
                 methodInfo
             );
 
-        public static MethodInfo GetCachedCustomMethod(string edmFunctionName, IEnumerable<Type> argumentTypes)
+        public static MethodInfo? GetCachedCustomMethod(string edmFunctionName, IEnumerable<Type> argumentTypes)
         {
-            if (customMethods.TryGetValue(GetMethodKey(edmFunctionName, argumentTypes), out MethodInfo methodInfo))
+            if (customMethods.TryGetValue(GetMethodKey(edmFunctionName, argumentTypes), out MethodInfo? methodInfo))
                 return methodInfo;
 
             return null;
@@ -79,7 +79,7 @@ namespace CosmosQuery
         private static IEnumerable<Type> GetArguments(MethodInfo methodInfo)
                 => methodInfo.IsStatic
                     ? methodInfo.GetParameters().Select(p => p.ParameterType)
-                    : new Type[] { methodInfo.DeclaringType }
+                    : new Type[] { methodInfo.DeclaringType! }
                         .Concat(methodInfo.GetParameters()
                         .Select(p => p.ParameterType));
     }

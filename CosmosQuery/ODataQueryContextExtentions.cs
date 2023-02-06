@@ -23,6 +23,7 @@ SOFTWARE.
  */
 using Microsoft.AspNetCore.OData.Query;
 using Microsoft.OData.Edm;
+using System.Diagnostics.CodeAnalysis;
 
 namespace CosmosQuery
 {
@@ -34,11 +35,9 @@ namespace CosmosQuery
 
             IEdmSchemaElement? schemaElement = GetSchemaElement();
 
-            if (schemaElement is null)
-                throw new InvalidOperationException($"The type '{type.FullName}' has not been declared in the entity data model.");
-
-            return FindProperties(schemaElement);
-            
+            return schemaElement is not null
+                ? FindProperties(schemaElement)
+                : null;            
 
             IEdmSchemaElement? GetSchemaElement() =>
                 context.Model.SchemaElements

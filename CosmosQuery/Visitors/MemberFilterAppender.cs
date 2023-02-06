@@ -1,6 +1,7 @@
 ﻿using LogicBuilder.Expressions.Utils;
 using Microsoft.AspNetCore.OData.Query;
 using Microsoft.OData.UriParser;
+using System.Diagnostics;
 using System.Linq.Expressions;
 
 namespace CosmosQuery.Visitors
@@ -71,7 +72,10 @@ namespace CosmosQuery.Visitors
             return FilterInserter.Insert(param.Type, lambdaExpression, binding);
         }
 
-        private FilterClause GetFilter() =>
-            this.pathSegments.Last().FilterOptions.FilterClause;        
+        private FilterClause GetFilter()
+        {
+            Debug.Assert(this.pathSegments.Last().FilterOptions is not null);
+            return this.pathSegments.Last().FilterOptions!.FilterClause;
+        }
     }
 }

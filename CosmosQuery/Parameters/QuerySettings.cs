@@ -24,10 +24,23 @@ SOFTWARE.
 namespace CosmosQuery
 {
     /// <summary>
-    /// Miscellaneous arguments for IMapper.ProjectTo
+    /// This class describes the settings to use during query composition.
     /// </summary>
-    public class ProjectionSettings
+    public sealed record QuerySettings
     {
-        public object Parameters { get; set; }
+        /// <summary>
+        /// Settings for configuring OData options on the server
+        /// </summary>
+        public ODataSettings? ODataSettings { get; init; }
+
+        /// <summary>
+        /// Miscellaneous arguments for IMapper.ProjectTo
+        /// </summary>
+        public ProjectionSettings? ProjectionSettings { get; init; }
+
+        /// <summary>
+        /// Async Settings hold the cancellation token for async requests
+        /// </summary>
+        public AsyncSettings? AsyncSettings { get; init; }
     }
 }
