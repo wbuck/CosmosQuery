@@ -88,7 +88,7 @@ namespace CosmosQuery
 
         private static Type GetClrType(EdmTypeStructure edmTypeStructure, IDictionary<EdmTypeStructure, Type> typesCache)
         {
-            if (typesCache.TryGetValue(edmTypeStructure, out Type type))
+            if (typesCache.TryGetValue(edmTypeStructure, out Type? type))
                 return type;
 
             type = LoadedTypes.SingleOrDefault
@@ -96,7 +96,7 @@ namespace CosmosQuery
                 item => edmTypeStructure.FullName == item.FullName
             );
 
-            if (type != null)
+            if (type is not null)
             {
                 if (type.IsValueType && !type.IsNullableType() && edmTypeStructure.IsNullable)
                 {
@@ -156,7 +156,7 @@ namespace CosmosQuery
                     {
                         allTypes.AddRange
                         (
-                            ex.Types.Where(type => type != null && type.IsPublic && type.IsVisible)
+                            ex.Types.Where(type => type is not null && type.IsPublic && type.IsVisible)!
                         );
                     }
                 });

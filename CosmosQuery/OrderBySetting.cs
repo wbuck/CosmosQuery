@@ -25,7 +25,7 @@ namespace CosmosQuery
 {
     internal class OrderBySetting
     {
-        public string Name { get; set; }
-        public OrderBySetting ThenBy { get; set; }
+        public string Name { get; set; } = default!;
+        public OrderBySetting? ThenBy { get; set; }
     }
 }

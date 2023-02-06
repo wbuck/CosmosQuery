@@ -149,8 +149,8 @@ namespace CosmosQuery
             }
         }
 
-        public static Expression GetQueryableMethod(this Expression expression,
-            ODataQueryContext context, OrderByClause orderByClause, Type type, int? skip, int? top)
+        public static Expression? GetQueryableMethod(this Expression expression,
+            ODataQueryContext context, OrderByClause? orderByClause, Type type, int? skip, int? top)
         {
             if (orderByClause is null && skip is null && top is null)
                 return null;
@@ -177,7 +177,7 @@ namespace CosmosQuery
             }
 
             return expression
-                .GetOrderByCall(orderByClause, context)
+                .GetOrderByCall(orderByClause!, context)
                 .GetSkipCall(skip)
                 .GetTakeCall(top);
         }
@@ -206,7 +206,7 @@ namespace CosmosQuery
                 );
         }
 
-        private static Expression GetPrimitiveOrderByCall(this Expression expression, OrderByClause orderByClause = null)
+        private static Expression GetPrimitiveOrderByCall(this Expression expression, OrderByClause? orderByClause = null)
         {
             const string OrderBy = nameof(Enumerable.OrderBy);
             const string OrderByDescending = nameof(Enumerable.OrderByDescending);
@@ -531,12 +531,6 @@ namespace CosmosQuery
                 param
             );
         }
-    }
-
-    public class ODataExpansionOptions : Expansion
-    {
-        public QueryOptions QueryOptions { get; set; }
-        public FilterOptions FilterOptions { get; set; }
     }
 
     public class QueryOptions

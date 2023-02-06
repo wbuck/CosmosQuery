@@ -54,6 +54,6 @@ namespace CosmosQuery
         /// <value>
         /// Default is null.
         /// </value>
-        public TimeZoneInfo TimeZone { get; set; }
+        public TimeZoneInfo? TimeZone { get; set; }
     }
 }
