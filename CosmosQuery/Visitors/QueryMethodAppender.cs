@@ -73,7 +73,7 @@ namespace CosmosQuery.Visitors
                     options.Top
                 );
 
-                return queryExpression.Type.IsArray
+                return expression.Type.IsArray
                     ? queryExpression.ToArrayCall(elementType)
                     : queryExpression.ToListCall(elementType);
             }

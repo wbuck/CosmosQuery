@@ -60,6 +60,24 @@ public sealed class QueryTests
     }
 
     [Theory]
+    [InlineData("/forest?$select=ValuesArray($skip=3;$top=2)", "ValuesArray=dtoForest.ValuesArray.OrderBy(p=>p).Skip(3).Take(2).ToArray()")]
+    [InlineData("/forest?$select=ValuesArray($skip=3)", "ValuesArray=dtoForest.ValuesArray.OrderBy(p=>p).Skip(3).ToArray()")]
+    [InlineData("/forest?$select=ValuesArray($top=2)", "ValuesArray=dtoForest.ValuesArray.OrderBy(p=>p).Take(2).ToArray()")]
+    [InlineData("/forest?$select=ValuesArray($orderby=$this)", "ValuesArray=dtoForest.ValuesArray.OrderBy(p=>p).ToArray()")]
+    [InlineData("/forest?$select=ValuesArray($orderby=$this desc)", "ValuesArray=dtoForest.ValuesArray.OrderByDescending(p=>p).ToArray()")]
+    [InlineData("/forest?$select=ValuesArray($orderby=$this desc;$top=1;$skip=1)", "ValuesArray=dtoForest.ValuesArray.OrderByDescending(p=>p).Skip(1).Take(1).ToArray()")]
+    public void QueryMethods_PrimitiveArray_ShouldProduceCorrectExpressions(string query, string expected)
+    {
+        string actual = Get<Forest, ForestModel>(_queryable, query).GetString();
+        Assert.Contains(expected, actual);
+    }
+
+    [Theory]
+    [InlineData
+    (
+        "/forest?$expand=DomainControllers/Entry/Dc($orderby=FullyQualifiedDomainName desc)",
+        @"DomainControllers=dtoForest\.DomainControllers\.Select\(.*?\)\.OrderByDescending\(it=>it\.Entry\.Dc\.FullyQualifiedDomainName\)\.ToList\(\)"
+    )]
     [InlineData
     (
         "/forest?$expand=DomainControllers/Entry/Dc($orderby=FullyQualifiedDomainName)",
@@ -69,6 +87,11 @@ public sealed class QueryTests
     (
         "/forest?$expand=DomainControllers/Entry/Dc($orderby=FullyQualifiedDomainName;$skip=1;$top=2)",
         @"DomainControllers=dtoForest\.DomainControllers\.Select\(.*?\)\.OrderBy\(it=>it\.Entry\.Dc\.FullyQualifiedDomainName\)\.Skip\(1\)\.Take\(2\)\.ToList\(\)"
+    )]
+    [InlineData
+    (
+        "/forest?$expand=DomainControllers/Entry/Dc($orderby=FullyQualifiedDomainName desc;$skip=1;$top=2)",
+        @"DomainControllers=dtoForest\.DomainControllers\.Select\(.*?\)\.OrderByDescending\(it=>it\.Entry\.Dc\.FullyQualifiedDomainName\)\.Skip\(1\)\.Take\(2\)\.ToList\(\)"
     )]
     [InlineData
     (

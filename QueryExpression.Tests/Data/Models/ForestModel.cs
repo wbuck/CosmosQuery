@@ -13,5 +13,7 @@ internal sealed record ForestModel
         new List<DomainControllerEntryModel>();
     public ICollection<int> Values { get; init; } = 
         new List<int>();
+    public int[] ValuesArray { get; init; } =
+        Array.Empty<int>();
     public ForestStatusModel Status { get; init; }
 }

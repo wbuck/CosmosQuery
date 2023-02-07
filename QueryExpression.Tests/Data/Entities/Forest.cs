@@ -14,6 +14,9 @@ public sealed record Forest : EntityBase
     public ICollection<int> Values { get; init; } =
         new List<int>();
 
+    public int[] ValuesArray { get; init; } =
+        Array.Empty<int>();
+
     public ForestStatus Status { get; init; }
 
     [JsonProperty("_etag")]
