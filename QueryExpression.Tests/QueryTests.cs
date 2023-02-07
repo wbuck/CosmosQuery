@@ -137,6 +137,33 @@ public sealed class QueryTests
         Assert.Matches(pattern, actual);
     }
 
+    [Theory]
+    [InlineData
+    (
+        "/forest?$expand=DomainControllers/Entry/Dc($select=FsmoRoles($orderby=$this))",
+        @"FsmoRoles=\(\(FsmoRoleModel\[]\)dtoDomainControllerEntry\.Entry\.Dc\.FsmoRoles\)\.OrderBy\(p=>p\)\.ToArray\(\)"
+    )]
+    [InlineData
+    (
+        "/forest?$expand=DomainControllers/Entry/Dc($select=FsmoRoles($orderby=$this;$top=1;$skip=1))",
+        @"FsmoRoles=\(\(FsmoRoleModel\[]\)dtoDomainControllerEntry\.Entry\.Dc\.FsmoRoles\)\.OrderBy\(p=>p\)\.Skip\(1\)\.Take\(1\)\.ToArray\(\)"
+    )]
+    [InlineData
+    (
+        "/forest?$expand=DomainControllers/Entry/Dc($select=FsmoRoles($orderby=$this desc;$top=1;$skip=1))",
+        @"FsmoRoles=\(\(FsmoRoleModel\[]\)dtoDomainControllerEntry\.Entry\.Dc\.FsmoRoles\)\.OrderByDescending\(p=>p\)\.Skip\(1\)\.Take\(1\)\.ToArray\(\)"
+    )]
+    [InlineData
+    (
+        "/forest?$expand=DomainControllers/Entry/Dc($select=FsmoRoles($top=1;$skip=1))",
+        @"FsmoRoles=\(\(FsmoRoleModel\[]\)dtoDomainControllerEntry\.Entry\.Dc\.FsmoRoles\)\.OrderBy\(p=>p\)\.Skip\(1\)\.Take\(1\)\.ToArray\(\)"
+    )]
+    public void QueryMethod_NestedEnumCollection_ShouldProduceCorrectExpressions(string query, string pattern)
+    {
+        string actual = Get<Forest, ForestModel>(this.queryable, query).GetString();
+        Assert.Matches(pattern, actual);
+    }
+
     private IQueryable<TModel> Get<TEntity, TModel>(IQueryable<TEntity> queryable, string query, ODataQueryOptions<TModel>? options = null, QuerySettings? querySettings = null)
         where TEntity : class
         where TModel : class        
