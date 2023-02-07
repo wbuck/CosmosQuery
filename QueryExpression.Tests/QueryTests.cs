@@ -2,7 +2,6 @@ using AgileObjects.ReadableExpressions;
 using CosmosQuery;
 using Microsoft.AspNetCore.OData;
 using Microsoft.AspNetCore.OData.Query;
-using QueryExpression.Tests.Data;
 using QueryExpression.Tests.Data.Entities;
 using QueryExpression.Tests.Data.Mappings;
 using QueryExpression.Tests.Data.Models;
@@ -106,6 +105,33 @@ public sealed class QueryTests
         @"DomainControllers=dtoForest\.DomainControllers\.Select\(.*?\)\.OrderBy\(a=>a\.DateAdded\)\.Take\(2\)\.ToList\(\)"
     )]
     public void QueryMethods_NestedEntityCollection_ShouldProduceCorrectExpression(string query, string pattern)
+    {
+        string actual = Get<Forest, ForestModel>(this.queryable, query).GetString();
+        Assert.Matches(pattern, actual);
+    }
+
+    [Theory]
+    [InlineData
+    (
+        "/forest?$select=DomainControllers($orderby=DateAdded)",
+        @"DomainControllers=dtoForest\.DomainControllers\.Select\(.*?\)\.OrderBy\(it=>it\.DateAdded\)\.ToList\(\)"
+    )]
+    [InlineData
+    (
+        "/forest?$select=DomainControllers($orderby=DateAdded desc)",
+        @"DomainControllers=dtoForest\.DomainControllers\.Select\(.*?\)\.OrderByDescending\(it=>it\.DateAdded\)\.ToList\(\)"
+    )]
+    [InlineData
+    (
+        "/forest?$select=DomainControllers($orderby=DateAdded desc;$skip=1;$top=1)",
+        @"DomainControllers=dtoForest\.DomainControllers\.Select\(.*?\)\.OrderByDescending\(it=>it\.DateAdded\)\.Skip\(1\)\.Take\(1\)\.ToList\(\)"
+    )]
+    [InlineData
+    (
+        "/forest?$select=DomainControllers($skip=1;$top=1)",
+        @"DomainControllers=dtoForest\.DomainControllers\.Select\(.*?\)\.OrderBy\(a=>a\.DateAdded\)\.Skip\(1\)\.Take\(1\)\.ToList\(\)"
+    )]
+    public void QueryMethods_NestedComplexCollection_ShouldProduceCorrectExpression(string query, string pattern)
     {
         string actual = Get<Forest, ForestModel>(this.queryable, query).GetString();
         Assert.Matches(pattern, actual);
