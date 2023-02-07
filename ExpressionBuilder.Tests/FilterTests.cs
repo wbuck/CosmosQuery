@@ -17,24 +17,17 @@ using Xunit;
 
 namespace ExpressionBuilder.Tests
 {
-    public class FilterTests
+    public sealed class FilterTests
     {
+        private readonly IServiceProvider serviceProvider;
+
         public FilterTests()
-        {
-            Initialize();
-        }
-
-        #region Fields
-        private IServiceProvider serviceProvider;
-        #endregion Fields
-
-        private void Initialize()
-        {
+        {            
             IServiceCollection services = new ServiceCollection();
             services.AddTransient<IApplicationBuilder>(sp => new ApplicationBuilder(sp))
                 .AddTransient<IRouteBuilder>(sp => new RouteBuilder(sp.GetRequiredService<IApplicationBuilder>()));
 
-            serviceProvider = services.BuildServiceProvider();
+            this.serviceProvider = services.BuildServiceProvider();
         }
 
         #region Inequalities
@@ -3228,7 +3221,7 @@ namespace ExpressionBuilder.Tests
             Assert.True(expected == resultExpression, string.Format("Expected expression '{0}' but the deserializer produced '{1}'", expected, resultExpression));
         }
 
-        private bool RunFilter<TModel>(Expression<Func<TModel, bool>> filter, TModel instance)
+        private static bool RunFilter<TModel>(Expression<Func<TModel, bool>> filter, TModel instance)
             => filter.Compile().Invoke(instance);
 
         private static Expression<Func<TElement, bool>> GetSelectNestedFilter<TModel, TElement>(string selectString) where TModel : class
@@ -3282,7 +3275,7 @@ namespace ExpressionBuilder.Tests
         private FilterClause GetFilterClause<TModel>(IDictionary<string, string> queryOptions, bool useFilterOption = false) where TModel : class
             => ODataHelpers.GetFilterClause<TModel>(queryOptions, serviceProvider, useFilterOption);
 
-        private Expression<Func<TModel, bool>> GetFilterExpression<TModel>(FilterClause filterClause) where TModel : class
+        private static Expression<Func<TModel, bool>> GetFilterExpression<TModel>(FilterClause filterClause) where TModel : class
             => (Expression<Func<TModel, bool>>)filterClause.GetFilterExpression(typeof(TModel), ODataHelpers.GetODataQueryContext<TModel>());
     }
 
