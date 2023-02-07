@@ -7,9 +7,6 @@ using QueryExpression.Tests.Data.Entities;
 using QueryExpression.Tests.Data.Mappings;
 using QueryExpression.Tests.Data.Models;
 using QueryExpression.Tests.Infrastructure;
-using System.Diagnostics;
-using System.Linq.Expressions;
-using System.Text.RegularExpressions;
 using IConfigurationProvider = AutoMapper.IConfigurationProvider;
 
 namespace QueryExpression.Tests;
@@ -25,7 +22,7 @@ internal static class QueryableExtensions
 public sealed class QueryTests
 {
     private readonly IServiceProvider serviceProvider;
-    private readonly IQueryable<Forest> _queryable = DatabaseSeeder.GenerateData().AsQueryable();
+    private readonly IQueryable<Forest> queryable = new List<Forest>().AsQueryable();
 
     public QueryTests()
     {
@@ -55,7 +52,7 @@ public sealed class QueryTests
     [InlineData("/forest?$select=Values($orderby=$this desc;$top=1;$skip=1)", "Values=dtoForest.Values.OrderByDescending(p=>p).Skip(1).Take(1).ToList()")]
     public void QueryMethods_PrimitiveCollection_ShouldProduceCorrectExpressions(string query, string expected)
     {
-        string actual = Get<Forest, ForestModel>(_queryable, query).GetString();
+        string actual = Get<Forest, ForestModel>(this.queryable, query).GetString();
         Assert.Contains(expected, actual);
     }
 
@@ -68,7 +65,7 @@ public sealed class QueryTests
     [InlineData("/forest?$select=ValuesArray($orderby=$this desc;$top=1;$skip=1)", "ValuesArray=dtoForest.ValuesArray.OrderByDescending(p=>p).Skip(1).Take(1).ToArray()")]
     public void QueryMethods_PrimitiveArray_ShouldProduceCorrectExpressions(string query, string expected)
     {
-        string actual = Get<Forest, ForestModel>(_queryable, query).GetString();
+        string actual = Get<Forest, ForestModel>(this.queryable, query).GetString();
         Assert.Contains(expected, actual);
     }
 
@@ -110,7 +107,7 @@ public sealed class QueryTests
     )]
     public void QueryMethods_NestedEntityCollection_ShouldProduceCorrectExpression(string query, string pattern)
     {
-        string actual = Get<Forest, ForestModel>(_queryable, query).GetString();
+        string actual = Get<Forest, ForestModel>(this.queryable, query).GetString();
         Assert.Matches(pattern, actual);
     }
 
