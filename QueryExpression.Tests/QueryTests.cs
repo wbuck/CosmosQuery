@@ -113,6 +113,38 @@ public sealed class QueryTests
     [Theory]
     [InlineData
     (
+        "/forest?$expand=DomainControllers/Entry/Dc($expand=Backups($orderby=DateCreated desc))",
+        @"Select\(dtoBackup=>.*?\).OrderByDescending\(it=>it\.DateCreated\)\.ToList\(\)"
+    )]
+    [InlineData
+    (
+        "/forest?$expand=DomainControllers/Entry/Dc($expand=Backups($orderby=DateCreated desc;$top=1;$skip=2))",
+        @"Select\(dtoBackup=>.*?\).OrderByDescending\(it=>it\.DateCreated\)\.Skip\(2\)\.Take\(1\)\.ToList\(\)"
+    )]
+    [InlineData
+    (
+        "/forest?$expand=DomainControllers/Entry/Dc($expand=Backups($orderby=DateCreated desc;$top=1))",
+        @"Select\(dtoBackup=>.*?\).OrderByDescending\(it=>it\.DateCreated\)\.Take\(1\)\.ToList\(\)"
+    )]
+    [InlineData
+    (
+        "/forest?$expand=DomainControllers/Entry/Dc($expand=Backups($orderby=DateCreated desc;$skip=1))",
+        @"Select\(dtoBackup=>.*?\).OrderByDescending\(it=>it\.DateCreated\)\.Skip\(1\)\.ToList\(\)"
+    )]
+    [InlineData
+    (
+        "/forest?$expand=DomainControllers/Entry/Dc($expand=Backups($top=1;$skip=2))",
+        @"Select\(dtoBackup=>.*?\).OrderBy\(a=>a\.Id\)\.Skip\(2\)\.Take\(1\)\.ToList\(\)"
+    )]
+    public void QueryMethods_NestedNestedEntityCollection_ShouldProduceCorrectExpression(string query, string pattern)
+    {
+        string actual = Get<Forest, ForestModel>(this.queryable, query).GetString();
+        Assert.Matches(pattern, actual);
+    }
+
+    [Theory]
+    [InlineData
+    (
         "/forest?$select=DomainControllers($orderby=DateAdded)",
         @"DomainControllers=dtoForest\.DomainControllers\.Select\(.*?\)\.OrderBy\(it=>it\.DateAdded\)\.ToList\(\)"
     )]

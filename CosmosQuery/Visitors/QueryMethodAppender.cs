@@ -47,6 +47,9 @@ namespace CosmosQuery.Visitors
             Debug.Assert(lastSegment.QueryOptions is not null);
 
             Type elementType = this.collectionSegment.ElementType;
+            int index = this.pathSegments.IndexOf(this.collectionSegment);
+
+            List<PathSegment> remainingPathSegments = this.pathSegments.Skip(index).ToList();
 
             Expression expression = binding.Expression.NodeType == ExpressionType.Call
                 ? GetCallExpression(binding.Expression, lastSegment.QueryOptions!)
@@ -57,7 +60,7 @@ namespace CosmosQuery.Visitors
             Expression GetCallExpression(Expression expression, QueryOptions options) =>
                 expression.GetQueryableExpression
                 (
-                    this.pathSegments, 
+                    remainingPathSegments, 
                     options, 
                     this.context
                 );
