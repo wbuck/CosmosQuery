@@ -20,7 +20,6 @@ namespace CosmosQuery.Visitors
             this.options = options;
             this.context = context;
             this.elementType = pathSegments.Last(s => s.IsCollection).ElementType;
-            Debugger.Break();
         }
 
         public static Expression Insert(IReadOnlyList<PathSegment> pathSegments, QueryOptions options, ODataQueryContext context, Expression expression) =>
