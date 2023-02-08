@@ -1,13 +1,12 @@
 # This workflow will build a .NET project
 # For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-net
 
-name: Build And Test
+name: PR - Build And Test
 
 on:
   workflow_dispatch:
   pull_request:
-    branches:
-    - main
+    branches: [ main ]
 
 jobs:
   build:
@@ -23,7 +22,7 @@ jobs:
     - name: Restore dependencies
       run: dotnet restore
     - name: Build
-      run: dotnet build --no-restore
+      run: dotnet build -c Release --no-restore
     - name: Launch Cosmos DB Emulator
       uses: southpolesteve/cosmos-emulator-github-action@v1
     - name: Test
