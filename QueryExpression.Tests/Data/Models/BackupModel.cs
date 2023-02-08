@@ -7,4 +7,5 @@ public sealed record BackupModel
     public DateTimeOffset DateCreated { get; init; }
     public BackupLocationModel Location { get; init; } = default!;
     public ICollection<int> Values { get; init; } = new List<int>();
+    public string[] StringValuesArray { get; init; } = Array.Empty<string>();
 }

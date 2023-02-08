@@ -145,6 +145,38 @@ public sealed class QueryTests
     [Theory]
     [InlineData
     (
+        "/forest?$expand=DomainControllers/Entry/Dc($expand=Backups($select=StringValuesArray($orderby=$this)))",
+        @"StringValuesArray=dtoBackup\.StringValuesArray\.OrderBy\(p=>p\)\.ToArray\(\)"
+    )]
+    [InlineData
+    (
+        "/forest?$expand=DomainControllers/Entry/Dc($expand=Backups($select=StringValuesArray($orderby=$this;$top=1;$skip=1)))",
+        @"StringValuesArray=dtoBackup\.StringValuesArray\.OrderBy\(p=>p\)\.Skip\(1\)\.Take\(1\)\.ToArray\(\)"
+    )]
+    [InlineData
+    (
+        "/forest?$expand=DomainControllers/Entry/Dc($expand=Backups($select=StringValuesArray($orderby=$this;$top=1)))",
+        @"StringValuesArray=dtoBackup\.StringValuesArray\.OrderBy\(p=>p\)\.Take\(1\)\.ToArray\(\)"
+    )]
+    [InlineData
+    (
+        "/forest?$expand=DomainControllers/Entry/Dc($expand=Backups($select=StringValuesArray($orderby=$this;$skip=1)))",
+        @"StringValuesArray=dtoBackup\.StringValuesArray\.OrderBy\(p=>p\)\.Skip\(1\)\.ToArray\(\)"
+    )]
+    [InlineData
+    (
+        "/forest?$expand=DomainControllers/Entry/Dc($expand=Backups($select=StringValuesArray($top=1;$skip=1)))",
+        @"StringValuesArray=dtoBackup\.StringValuesArray\.OrderBy\(p=>p\)\.Skip\(1\)\.Take\(1\)\.ToArray\(\)"
+    )]
+    public void QueryMethods_NestedNestedPrimitiveCollection_ShouldProduceCorrectExpression(string query, string pattern)
+    {
+        string actual = Get<Forest, ForestModel>(this.queryable, query).GetString();
+        Assert.Matches(pattern, actual);
+    }
+
+    [Theory]
+    [InlineData
+    (
         "/forest?$select=DomainControllers($orderby=DateAdded)",
         @"DomainControllers=dtoForest\.DomainControllers\.Select\(.*?\)\.OrderBy\(it=>it\.DateAdded\)\.ToList\(\)"
     )]
