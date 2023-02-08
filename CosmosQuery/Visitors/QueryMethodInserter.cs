@@ -2,6 +2,7 @@
 using LogicBuilder.Expressions.Utils;
 using Microsoft.AspNetCore.OData.Query;
 using Microsoft.OData.UriParser;
+using System.Diagnostics;
 using System.Linq.Expressions;
 
 namespace CosmosQuery.Visitors
@@ -18,7 +19,7 @@ namespace CosmosQuery.Visitors
             this.pathSegments = pathSegments;
             this.options = options;
             this.context = context;
-            this.elementType = pathSegments[0].ElementType;
+            this.elementType = pathSegments.Last(s => s.IsCollection).ElementType;
         }
 
         public static Expression Insert(IReadOnlyList<PathSegment> pathSegments, QueryOptions options, ODataQueryContext context, Expression expression) =>

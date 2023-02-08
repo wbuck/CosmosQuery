@@ -1,4 +1,4 @@
-﻿namespace CosmosQuery.Tests.Data.Entities;
+﻿namespace QueryExpression.Tests.Data.Entities;
 
 public sealed record Backup : EntityBase
 {    

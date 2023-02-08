@@ -1009,6 +1009,56 @@ public sealed class GetQueryTests
     }
 
     [Fact]
+    public async Task FilterEq_NestedNestedPrimitiveCollection_ShouldReturnFilteredLiteralCollectionOfValues()
+    {
+        const string query = "/forest?$expand=DomainControllers/Entry/Dc($expand=Backups($select=StringValuesArray($filter=$this eq 'Value1')))";
+        Test(Get<ForestModel, Forest>(query));
+        Test(await GetAsync<ForestModel, Forest>(query));
+        Test(await GetUsingCustomNameSpace<ForestModel, Forest>(query));
+
+        static void Test(ICollection<ForestModel> collection)
+        {
+            Assert.Equal(3, collection.Count);
+            AssertBackups(collection.ElementAt(0).DomainControllers.SelectMany(e => e.Entry.Dc.Backups));
+            AssertBackups(collection.ElementAt(1).DomainControllers.SelectMany(e => e.Entry.Dc.Backups));
+            AssertBackups(collection.ElementAt(2).DomainControllers.SelectMany(e => e.Entry.Dc.Backups));
+        }
+
+        static void AssertBackups(IEnumerable<BackupModel> backups)
+        {
+            Assert.All(backups, backup => Assert.Single(backup.StringValuesArray));
+            Assert.All(backups, backup => Assert.Equal("Value1", backup.StringValuesArray[0]));
+        }
+    }
+
+    [Fact]
+    public async Task FilterIn_NestedNestedPrimitiveCollection_ShouldReturnFilteredLiteralCollectionOfValues()
+    {
+        const string query = "/forest?$expand=DomainControllers/Entry/Dc($expand=Backups($select=StringValuesArray($filter=$this in ('Value2', 'Value3'))))";
+        Test(Get<ForestModel, Forest>(query));
+        Test(await GetAsync<ForestModel, Forest>(query));
+        Test(await GetUsingCustomNameSpace<ForestModel, Forest>(query));
+
+        static void Test(ICollection<ForestModel> collection)
+        {
+            Assert.Equal(3, collection.Count);
+            AssertBackups(collection.ElementAt(0).DomainControllers.SelectMany(e => e.Entry.Dc.Backups));
+            AssertBackups(collection.ElementAt(1).DomainControllers.SelectMany(e => e.Entry.Dc.Backups));
+            AssertBackups(collection.ElementAt(2).DomainControllers.SelectMany(e => e.Entry.Dc.Backups));
+        }
+
+        static void AssertBackups(IEnumerable<BackupModel> backups)
+        {
+            Assert.All(backups, backup => Assert.Equal(2, backup.StringValuesArray.Length));
+            Assert.All(backups, backup => 
+            { 
+                Assert.Contains("Value2", backup.StringValuesArray);
+                Assert.Contains("Value3", backup.StringValuesArray);
+            });
+        }
+    }
+
+    [Fact]
     public async Task ForestSelectValues_NestedFilter_ShouldReturnFilteredLiteralCollectionOfValues()
     {
         const string query = "/forest?$select=Values($filter=$this gt 1 and $this lt 101)&$orderby=ForestName";

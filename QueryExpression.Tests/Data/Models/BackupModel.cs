@@ -1,4 +1,4 @@
-﻿namespace CosmosQuery.Tests.Data.Models;
+﻿namespace QueryExpression.Tests.Data.Models;
 
 public sealed record BackupModel
 {
