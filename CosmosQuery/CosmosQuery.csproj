@@ -5,14 +5,12 @@
 	<Nullable>enable</Nullable>
   	<RootNamespace>CosmosQuery</RootNamespace>
   	<PackageId>CosmosQuery</PackageId>
-  	<Description>Creates LINQ expressions from ODataQueryOptions and executes the query.</Description>
+  	<Description>OData query expression mapping for Cosmos DB</Description>
   	<PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-  	<PackageTags>linq expressions odata cosmosdb</PackageTags>
-  	<!--<PackageIcon>icon.png</PackageIcon>-->
+  	<PackageTags>linq expressions odata cosmosdb</PackageTags>  	
   	<RepositoryUrl>https://github.com/wbuck/CosmosQuery</RepositoryUrl>
 	<PackageProjectUrl>https://github.com/wbuck/CosmosQuery</PackageProjectUrl>
   	<PackageLicenseExpression>MIT</PackageLicenseExpression>  	
-  	<!--<AssemblyOriginatorKeyFile>..\Cert.snk</AssemblyOriginatorKeyFile>-->
   	<SignAssembly>false</SignAssembly>
   	<MinVerTagPrefix>v</MinVerTagPrefix>
   	<PublishRepositoryUrl>true</PublishRepositoryUrl>
@@ -22,6 +20,10 @@
   	<Deterministic>true</Deterministic>
   	<ContinuousIntegrationBuild Condition="'$(GITHUB_ACTIONS)' == 'true'">true</ContinuousIntegrationBuild>
   	<ImplicitUsings>enable</ImplicitUsings>
+  	<PackageReadmeFile>README.md</PackageReadmeFile>
+  	<Authors>Warren Buckley</Authors>
+  	<Title></Title>
+  	<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
   </PropertyGroup>
 
   <ItemGroup>
@@ -42,6 +44,13 @@
 
   <ItemGroup>
   	<FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
   </ItemGroup>
 
 </Project>
