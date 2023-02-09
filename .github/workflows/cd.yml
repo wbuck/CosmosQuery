@@ -29,10 +29,6 @@ jobs:
         $version = Get-BuildVersion -VersionString $env:GITHUB_REF
         echo "BUILD_VERSION=$version" >> $env:GITHUB_ENV    
       shell: pwsh
-      
-    - name: Print Version
-      run: | 
-        echo "Warren test: " + $env:BUILD_VERSION
         
     - name: Restore dependencies
       run: dotnet restore
