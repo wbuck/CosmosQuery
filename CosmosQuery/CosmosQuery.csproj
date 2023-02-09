@@ -5,16 +5,13 @@
 	<Nullable>enable</Nullable>
   	<RootNamespace>CosmosQuery</RootNamespace>
   	<PackageId>CosmosQuery</PackageId>
-  	<Description>Creates LINQ expressions from ODataQueryOptions and executes the query.</Description>
+  	<Description>OData query expression mapping for Cosmos DB</Description>
   	<PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-  	<PackageTags>linq expressions odata cosmosdb</PackageTags>
-  	<!--<PackageIcon>icon.png</PackageIcon>-->
+  	<PackageTags>linq expressions odata cosmosdb</PackageTags>  	
   	<RepositoryUrl>https://github.com/wbuck/CosmosQuery</RepositoryUrl>
 	<PackageProjectUrl>https://github.com/wbuck/CosmosQuery</PackageProjectUrl>
   	<PackageLicenseExpression>MIT</PackageLicenseExpression>  	
-  	<!--<AssemblyOriginatorKeyFile>..\Cert.snk</AssemblyOriginatorKeyFile>-->
   	<SignAssembly>false</SignAssembly>
-  	<MinVerTagPrefix>v</MinVerTagPrefix>
   	<PublishRepositoryUrl>true</PublishRepositoryUrl>
   	<IncludeSymbols>true</IncludeSymbols>
   	<SymbolPackageFormat>snupkg</SymbolPackageFormat>
@@ -22,6 +19,9 @@
   	<Deterministic>true</Deterministic>
   	<ContinuousIntegrationBuild Condition="'$(GITHUB_ACTIONS)' == 'true'">true</ContinuousIntegrationBuild>
   	<ImplicitUsings>enable</ImplicitUsings>
+  	<PackageReadmeFile>README.md</PackageReadmeFile>
+  	<Authors>Warren Buckley</Authors>
+  	<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
   </PropertyGroup>
 
   <ItemGroup>
@@ -33,15 +33,17 @@
   	<PackageReference Include="LogicBuilder.Expressions.Utils" Version="[5.0.6,6.0.0)" />
   	<PackageReference Include="Microsoft.AspNetCore.OData" Version="8.0.6" />
   	<PackageReference Include="Microsoft.Azure.Cosmos" Version="3.31.2" />
-  	<PackageReference Include="MinVer" Version="2.5.0">
-  		<PrivateAssets>all</PrivateAssets>
-  		<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-  	</PackageReference>
-  	<PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
   </ItemGroup>
 
   <ItemGroup>
   	<FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
   </ItemGroup>
 
 </Project>
