@@ -9,7 +9,9 @@ on:
 
 jobs:
   build:
-  
+    env:
+     BUILD_VERSION: ''
+     
     runs-on: windows-latest
 
     steps:
@@ -20,14 +22,26 @@ jobs:
       with:
         dotnet-version: 6.0.x
         
+    - name: Get Build Version
+      run: |
+        Import-Module .\build\GetBuildVersion.ps1
+        Write-Host $env:GITHUB_REF
+        $version = Get-BuildVersion -VersionString $env:GITHUB_REF
+        echo "BUILD_VERSION=$version" | Out-File -FilePath $env:GITHUB_REF -Encoding utf-8 -Append
+      shell: pwsh
+        
     - name: Restore dependencies
       run: dotnet restore
       
     - name: Build
-      run: dotnet build -c Release --no-restore
+      run: dotnet build -c Release -p:Version=$BUILD_VERSION --no-restore
       
     - name: Launch Cosmos DB Emulator
       uses: southpolesteve/cosmos-emulator-github-action@v1
       
     - name: Test
-      run: dotnet test --no-build --verbosity normal
+      run: dotnet test --no-build --verbosity normal        
+      
+    - name: Publish to Nuget
+      if: startsWith(github.ref, 'refs/heads/release')
+      
