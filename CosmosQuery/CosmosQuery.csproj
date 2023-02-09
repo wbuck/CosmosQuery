@@ -12,7 +12,6 @@
 	<PackageProjectUrl>https://github.com/wbuck/CosmosQuery</PackageProjectUrl>
   	<PackageLicenseExpression>MIT</PackageLicenseExpression>  	
   	<SignAssembly>false</SignAssembly>
-  	<MinVerTagPrefix>v</MinVerTagPrefix>
   	<PublishRepositoryUrl>true</PublishRepositoryUrl>
   	<IncludeSymbols>true</IncludeSymbols>
   	<SymbolPackageFormat>snupkg</SymbolPackageFormat>
@@ -22,7 +21,6 @@
   	<ImplicitUsings>enable</ImplicitUsings>
   	<PackageReadmeFile>README.md</PackageReadmeFile>
   	<Authors>Warren Buckley</Authors>
-  	<Title></Title>
   	<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
   </PropertyGroup>
 
@@ -35,11 +33,6 @@
   	<PackageReference Include="LogicBuilder.Expressions.Utils" Version="[5.0.6,6.0.0)" />
   	<PackageReference Include="Microsoft.AspNetCore.OData" Version="8.0.6" />
   	<PackageReference Include="Microsoft.Azure.Cosmos" Version="3.31.2" />
-  	<PackageReference Include="MinVer" Version="2.5.0">
-  		<PrivateAssets>all</PrivateAssets>
-  		<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-  	</PackageReference>
-  	<PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
   </ItemGroup>
 
   <ItemGroup>
