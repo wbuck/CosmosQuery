@@ -1,14 +1,14 @@
 # This workflow will build a .NET project
 # For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-net
 
-name: CD - Build, Test and Deploy to Nuget
+name: Build, Test and Deploy to Nuget
 
 on:
   release:
     types: [published]
 
 jobs:
-  build:         
+  build-and-deploy:         
     runs-on: windows-latest
     
     env:
@@ -25,9 +25,13 @@ jobs:
     - name: Get Build Version
       run: |
         . .\build\GetBuildVersion.ps1
-        Write-Host $env:GITHUB_REF
         $version = Get-BuildVersion -VersionString $env:GITHUB_REF
         echo "BUILD_VERSION=$version" >> $env:GITHUB_ENV    
+      shell: pwsh
+      
+    - name: Print Build Version
+      run: |
+        Write-Host "Build Version: $env:BUILD_VERSION"
       shell: pwsh
         
     - name: Restore dependencies
@@ -36,12 +40,12 @@ jobs:
     - name: Build
       run: dotnet build -c Release -p:Version=$env:BUILD_VERSION --no-restore
       
-    #- name: Launch Cosmos DB Emulator
-    #  uses: southpolesteve/cosmos-emulator-github-action@v1
+    - name: Launch Cosmos DB Emulator
+      uses: southpolesteve/cosmos-emulator-github-action@v1
       
-    #- name: Test
-    #  run: dotnet test --no-build --verbosity normal        
+    - name: Test
+      run: dotnet test --no-build --verbosity normal        
       
-    #- name: Publish to Nuget
-    #  if: startsWith(github.ref, 'refs/heads/release')
+    - name: Publish to Nuget
+      run: dotnet nuget push **\*.nupkg --api-key ${{secrets.NUGET_API_KEY}} --source https://api.nuget.org/v3/index.json
       
