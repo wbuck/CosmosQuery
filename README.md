@@ -58,9 +58,9 @@ public class MyController : ODataController
 }
 ```
 
-And thats it, you're done. The query is mapped to your entitiy type before query execution.
+And thats it, you're done!
 <br>
-The query and results are correctly mapped to and from your `DTO` type(s) and your `Entity` type(s). This keeps your entities from beging publically exposed via the API.
+The query and results are correctly mapped to and from your `DTO` and `Entity` type(s). This keeps your entities from being publically exposed via the API.
 
 ## Functions
 
