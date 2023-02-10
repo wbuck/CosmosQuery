@@ -1,6 +1,7 @@
 # CosmosQuery
 
-[![Nuget (with prereleases)](https://img.shields.io/nuget/vpre/CosmosQuery?color=blue&style=for-the-badge)](https://www.nuget.org/packages/CosmosQuery)
+![CI](https://github.com/wbuck/cosmosquery/actions/workflows/ci.yml/badge.svg)
+[![Nuget (with prereleases)](https://img.shields.io/nuget/v/CosmosQuery)](https://www.nuget.org/packages/CosmosQuery)
 
 Creates LINQ expressions from `ODataQueryOptions` and executes the query.
 This library uses [AutoMapper][AutoMapper]'s [Queryable Extentions](https://docs.automapper.org/en/stable/Queryable-Extensions.html) to project from your `DTO` (Data Transfer Object) to your entities.
