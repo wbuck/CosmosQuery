@@ -1,7 +1,9 @@
 # CosmosQuery
+
+[![Nuget (with prereleases)](https://img.shields.io/nuget/vpre/CosmosQuery?color=blue&style=for-the-badge)](https://www.nuget.org/packages/CosmosQuery)
+
 Creates LINQ expressions from `ODataQueryOptions` and executes the query.
 This library uses [AutoMapper][AutoMapper]'s [Queryable Extentions](https://docs.automapper.org/en/stable/Queryable-Extensions.html) to project from your `DTO` (Data Transfer Object) to your entities.
-
 
 ## Usage
 
@@ -88,7 +90,7 @@ public static IQueryable<TModel> GetQuery<TModel, TData>(
     this IQueryable<TData> query,
     IMapper mapper,
     ODataQueryOptions<TModel> options,
-    QuerySettings? querySettings = null)
+    QuerySettings? querySettings = null);
 
 public static async Task<ICollection<TModel>> GetAsync<TModel, TData>(
     this IQueryable<TData> query, 
