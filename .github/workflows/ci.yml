@@ -1,14 +1,14 @@
 # This workflow will build a .NET project
 # For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-net
 
-name: CI - Build And Test
+name: PR - Build And Test
 
 on:
   pull_request:
     branches: [ main ]
 
 jobs:
-  build:
+  build-and-test:
   
     runs-on: windows-latest
 
