@@ -3,8 +3,27 @@
 ![CI](https://github.com/wbuck/cosmosquery/actions/workflows/ci.yml/badge.svg)
 [![Nuget (with prereleases)](https://img.shields.io/nuget/v/CosmosQuery)](https://www.nuget.org/packages/CosmosQuery)
 
-Creates LINQ expressions from `ODataQueryOptions` and executes the query.
-This library uses [AutoMapper][AutoMapper]'s [Queryable Extentions](https://docs.automapper.org/en/stable/Queryable-Extensions.html) to project from your `DTO` (Data Transfer Object) to your entities.
+CosmosQuery generates an `Expression` tree from the supplied `ODataQueryOptions`.
+This library uses [AutoMapper][AutoMapper]'s [Queryable Extentions](https://docs.automapper.org/en/stable/Queryable-Extensions.html) in conjunction with custom `Expression` builders to generate an `Expression` tree which can be parsed by the Cosmos DB LINQ provider. Furthermore, because [AutoMapper][AutoMapper] is used for query projection you do not have to expose your entity types and can instead use DTO’s (Data Transfer Object) in your public facing API.
+
+<br>
+
+Where this library excels is how it deals with complex types. Currently `OData` does not provide a means of `$expand`ing complex types. The consequence of this when using something like `EFCore` is that your complex data members will be `null` after performing a query unless the consumer of your API explicitly `$select`’s said data members. This can quickly become cumbersome when dealing with complex documents.
+
+<br>
+
+What CosmosQuery does instead is treat complex types as just another property of your entity type. In other words, all complex types are automatically expanded and pulled from the database. The data being pulled from the DB can still be controlled using the `$select` operator.
+
+## Supported Operations
+
+Currently CosmosQuery supports the following OData operations in both a query and subquery:
+1.	`$select`
+2.	`$filter`
+3.	`$orderby`
+4.	`$top`
+5.	`$skip`
+
+Although this library currently supports the use of `$orderby`, `$top`, and `$skip` within a subquery Cosmos DB does **not**.
 
 ## Usage
 
