@@ -177,6 +177,11 @@ public sealed class QueryTests
     [Theory]
     [InlineData
     (
+        "/forest?$select=DomainControllers($orderby=DateAdded,DcCredentials/Username)",
+        @"DomainControllers=dtoForest\.DomainControllers\.Select\(.*?\)\.OrderBy\(it=>it\.DateAdded\)\.ThenBy\(it=>it\.DcCredentials\.Username\)\.ToList\(\)"
+    )]
+    [InlineData
+    (
         "/forest?$select=DomainControllers($orderby=DateAdded)",
         @"DomainControllers=dtoForest\.DomainControllers\.Select\(.*?\)\.OrderBy\(it=>it\.DateAdded\)\.ToList\(\)"
     )]
@@ -202,6 +207,11 @@ public sealed class QueryTests
     }
 
     [Theory]
+    [InlineData
+    (
+        "/forest?$expand=DomainControllers/Entry/Dc($select=FsmoRoles($orderby=$this,$this))",
+        @"FsmoRoles=\(\(FsmoRoleModel\[]\)dtoDomainControllerEntry\.Entry\.Dc\.FsmoRoles\)\.OrderBy\(p=>p\)\.ThenBy\(p=>p\)\.ToArray\(\)"
+    )]
     [InlineData
     (
         "/forest?$expand=DomainControllers/Entry/Dc($select=FsmoRoles($orderby=$this))",
