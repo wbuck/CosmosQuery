@@ -78,7 +78,7 @@ namespace CosmosQuery.Visitors
 
         private Expression GetThenByExpression(Expression expression, OrderByClause clause)
         {
-            const string ThenBy = nameof(Enumerable.ThenByDescending);
+            const string ThenBy = nameof(Enumerable.ThenBy);
             const string ThenByDescending = nameof(Enumerable.ThenByDescending);
 
             string method = clause.Direction == OrderByDirection.Descending
