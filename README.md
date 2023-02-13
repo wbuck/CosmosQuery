@@ -1,4 +1,4 @@
-# CosmosQuery
+![CosmosQuery](Title.png)
 
 ![CI](https://github.com/wbuck/cosmosquery/actions/workflows/ci.yml/badge.svg)
 [![Nuget (with prereleases)](https://img.shields.io/nuget/v/CosmosQuery)](https://www.nuget.org/packages/CosmosQuery)
