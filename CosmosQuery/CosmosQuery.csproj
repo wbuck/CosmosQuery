@@ -11,6 +11,7 @@
   	<RepositoryUrl>https://github.com/wbuck/CosmosQuery</RepositoryUrl>
 	<PackageProjectUrl>https://github.com/wbuck/CosmosQuery</PackageProjectUrl>
   	<PackageLicenseExpression>MIT</PackageLicenseExpression>  	
+	<PackageIcon>icon.png</PackageIcon>
   	<SignAssembly>false</SignAssembly>
   	<PublishRepositoryUrl>true</PublishRepositoryUrl>
   	<IncludeSymbols>true</IncludeSymbols>
