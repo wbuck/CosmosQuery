@@ -71,6 +71,21 @@ public sealed class QueryTests
     [Theory]
     [InlineData
     (
+        "/forest?$expand=DomainControllers/Entry/Dc($orderby=FullyQualifiedDomainName desc,Status)",
+        @"DomainControllers=dtoForest\.DomainControllers\.Select\(.*?\)\.OrderByDescending\(it=>it\.Entry\.Dc\.FullyQualifiedDomainName\)\.ThenBy\(it=>it\.Entry\.Dc\.Status\)\.ToList\(\)"
+    )]
+    [InlineData
+    (
+        "/forest?$expand=DomainControllers/Entry/Dc($orderby=FullyQualifiedDomainName,Status desc)",
+        @"DomainControllers=dtoForest\.DomainControllers\.Select\(.*?\)\.OrderBy\(it=>it\.Entry\.Dc\.FullyQualifiedDomainName\)\.ThenByDescending\(it=>it\.Entry\.Dc\.Status\)\.ToList\(\)"
+    )]
+    [InlineData
+    (
+        "/forest?$expand=DomainControllers/Entry/Dc($orderby=FullyQualifiedDomainName desc,Status desc)",
+        @"DomainControllers=dtoForest\.DomainControllers\.Select\(.*?\)\.OrderByDescending\(it=>it\.Entry\.Dc\.FullyQualifiedDomainName\)\.ThenByDescending\(it=>it\.Entry\.Dc\.Status\)\.ToList\(\)"
+    )]
+    [InlineData
+    (
         "/forest?$expand=DomainControllers/Entry/Dc($orderby=FullyQualifiedDomainName desc)",
         @"DomainControllers=dtoForest\.DomainControllers\.Select\(.*?\)\.OrderByDescending\(it=>it\.Entry\.Dc\.FullyQualifiedDomainName\)\.ToList\(\)"
     )]
@@ -111,6 +126,21 @@ public sealed class QueryTests
     }
 
     [Theory]
+    [InlineData
+    (
+        "/forest?$expand=DomainControllers/Entry/Dc($expand=Backups($orderby=DateCreated,Location/NetworkInformation/Address desc))",
+        @"Select\(dtoBackup=>.*?\).OrderBy\(it=>it\.DateCreated\)\.ThenByDescending\(it=>it\.Location\.NetworkInformation\.Address\)\.ToList\(\)"
+    )]
+    [InlineData
+    (
+        "/forest?$expand=DomainControllers/Entry/Dc($expand=Backups($orderby=DateCreated desc,Location/NetworkInformation/Address))",
+        @"Select\(dtoBackup=>.*?\).OrderByDescending\(it=>it\.DateCreated\)\.ThenBy\(it=>it\.Location\.NetworkInformation\.Address\)\.ToList\(\)"
+    )]
+    [InlineData
+    (
+        "/forest?$expand=DomainControllers/Entry/Dc($expand=Backups($orderby=DateCreated,Location/NetworkInformation/Address))",
+        @"Select\(dtoBackup=>.*?\).OrderBy\(it=>it\.DateCreated\)\.ThenBy\(it=>it\.Location\.NetworkInformation\.Address\)\.ToList\(\)"
+    )]
     [InlineData
     (
         "/forest?$expand=DomainControllers/Entry/Dc($expand=Backups($orderby=DateCreated desc))",
@@ -175,6 +205,21 @@ public sealed class QueryTests
     }
 
     [Theory]
+    [InlineData
+    (
+        "/forest?$select=DomainControllers($orderby=DateAdded desc,DcCredentials/Username)",
+        @"DomainControllers=dtoForest\.DomainControllers\.Select\(.*?\)\.OrderByDescending\(it=>it\.DateAdded\)\.ThenBy\(it=>it\.DcCredentials\.Username\)\.ToList\(\)"
+    )]
+    [InlineData
+    (
+        "/forest?$select=DomainControllers($orderby=DateAdded,DcCredentials/Username desc)",
+        @"DomainControllers=dtoForest\.DomainControllers\.Select\(.*?\)\.OrderBy\(it=>it\.DateAdded\)\.ThenByDescending\(it=>it\.DcCredentials\.Username\)\.ToList\(\)"
+    )]
+    [InlineData
+    (
+        "/forest?$select=DomainControllers($orderby=DateAdded desc,DcCredentials/Username desc)",
+        @"DomainControllers=dtoForest\.DomainControllers\.Select\(.*?\)\.OrderByDescending\(it=>it\.DateAdded\)\.ThenByDescending\(it=>it\.DcCredentials\.Username\)\.ToList\(\)"
+    )]
     [InlineData
     (
         "/forest?$select=DomainControllers($orderby=DateAdded,DcCredentials/Username)",
