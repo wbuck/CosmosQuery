@@ -4,6 +4,7 @@ using CosmosQuery.Visitors;
 using Microsoft.AspNetCore.OData.Query;
 using Microsoft.OData.UriParser;
 using System.Linq.Expressions;
+using System.Reflection.Metadata;
 
 namespace CosmosQuery.Extensions;
 internal static class ExpressionExt
@@ -16,19 +17,26 @@ internal static class ExpressionExt
         Type elementType = pathSegments[0].ElementType;
         ParameterExpression parameter = Expression.Parameter(elementType, clause.RangeVariable.Name.Replace("$", string.Empty));
 
-        Expression memberExpression = pathSegments.Skip(1).Aggregate((Expression)parameter, (expression, next)
-            => Expression.MakeMemberAccess(expression, next.Member));
-
-        string[] properties = clause.Expression.GetPropertyPath().Split('.');
-
-        memberExpression = properties.Aggregate(memberExpression, (expression, next)
-            => Expression.MakeMemberAccess(expression, expression.Type.GetFieldOrProperty(next)));
+        Expression memberExpression = parameter.GetMemeberAccessExpression(clause.Expression, pathSegments);
 
         return Expression.Lambda
         (
             memberExpression,
             parameter
         );
+    }
+
+    public static Expression GetMemeberAccessExpression(this ParameterExpression parameter, SingleValueNode node, IReadOnlyList<PathSegment> pathSegments)
+    {
+        Expression memberExpression = pathSegments.Skip(1).Aggregate((Expression)parameter, (expression, next)
+            => Expression.MakeMemberAccess(expression, next.Member));
+
+        string[] properties = node.GetPropertyPath().Split('.');
+
+        memberExpression = properties.Aggregate(memberExpression, (expression, next)
+            => Expression.MakeMemberAccess(expression, expression.Type.GetFieldOrProperty(next)));
+
+        return memberExpression;
     }
 
     public static Expression Unquote(this Expression exp)
