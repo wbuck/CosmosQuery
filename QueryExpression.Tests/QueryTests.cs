@@ -1,5 +1,6 @@
 using AgileObjects.ReadableExpressions;
 using CosmosQuery;
+using CosmosQuery.Extensions;
 using Microsoft.AspNetCore.OData;
 using Microsoft.AspNetCore.OData.Query;
 using QueryExpression.Tests.Data.Entities;

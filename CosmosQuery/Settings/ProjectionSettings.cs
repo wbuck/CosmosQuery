@@ -21,32 +21,9 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
  */
-namespace CosmosQuery
-{
-    /// <summary>
-    /// This class describes the settings to use during query composition.
-    /// </summary>
-    public sealed record QuerySettings
-    {
-        /// <summary>
-        /// Settings for configuring OData options on the server
-        /// </summary>
-        public ODataSettings? ODataSettings { get; init; }
+namespace CosmosQuery;
 
-        /// <summary>
-        /// Miscellaneous arguments for IMapper.ProjectTo
-        /// </summary>
-        public ProjectionSettings? ProjectionSettings { get; init; }
-
-        /// <summary>
-        /// Async Settings hold the cancellation token for async requests
-        /// </summary>
-        public AsyncSettings? AsyncSettings { get; init; }
-
-        /// <summary>
-        /// CosmosQuery caches reflected types and uses those cached types in subsequent 
-        /// queries. To clear the type cache after each query set this property to true.
-        /// </summary>
-        public bool ClearTypeCache { get; init; } = false;
-    }
-}
+/// <summary>
+/// Miscellaneous arguments for IMapper.ProjectTo
+/// </summary>
+public sealed record ProjectionSettings(object Parameters);

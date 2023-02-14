@@ -21,11 +21,10 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
  */
-namespace CosmosQuery
+
+namespace CosmosQuery.Settings;
+internal class OrderBySetting
 {
-    internal class OrderBySetting
-    {
-        public string Name { get; set; } = default!;
-        public OrderBySetting? ThenBy { get; set; }
-    }
+    public string Name { get; set; } = default!;
+    public OrderBySetting? ThenBy { get; set; }
 }

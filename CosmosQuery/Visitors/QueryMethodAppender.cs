@@ -1,4 +1,5 @@
-﻿using LogicBuilder.Expressions.Utils;
+﻿using CosmosQuery.Extensions;
+using LogicBuilder.Expressions.Utils;
 using Microsoft.AspNetCore.OData.Query;
 using System.Diagnostics;
 using System.Linq.Expressions;

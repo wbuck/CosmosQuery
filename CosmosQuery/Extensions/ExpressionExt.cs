@@ -1,12 +1,13 @@
 ﻿using AutoMapper.Internal;
+using CosmosQuery.Cache;
 using CosmosQuery.Visitors;
 using Microsoft.AspNetCore.OData.Query;
 using Microsoft.OData.UriParser;
 using System.Linq.Expressions;
 
-namespace CosmosQuery;
+namespace CosmosQuery.Extensions;
 internal static class ExpressionExt
-{   
+{
     public static Expression GetQueryableExpression(this Expression expression, IReadOnlyList<PathSegment> pathSegments, QueryOptions options, ODataQueryContext context)
         => QueryMethodInserter.Insert(pathSegments, options, context, expression);
 
@@ -15,12 +16,12 @@ internal static class ExpressionExt
         Type elementType = pathSegments[0].ElementType;
         ParameterExpression parameter = Expression.Parameter(elementType, clause.RangeVariable.Name.Replace("$", string.Empty));
 
-        Expression memberExpression = pathSegments.Skip(1).Aggregate((Expression)parameter, (expression, next) 
+        Expression memberExpression = pathSegments.Skip(1).Aggregate((Expression)parameter, (expression, next)
             => Expression.MakeMemberAccess(expression, next.Member));
 
         string[] properties = clause.Expression.GetPropertyPath().Split('.');
 
-        memberExpression = properties.Aggregate(memberExpression, (expression, next) 
+        memberExpression = properties.Aggregate(memberExpression, (expression, next)
             => Expression.MakeMemberAccess(expression, expression.Type.GetFieldOrProperty(next)));
 
         return Expression.Lambda
@@ -35,7 +36,7 @@ internal static class ExpressionExt
             ? ((UnaryExpression)exp).Operand.Unquote()
             : exp;
 
-    public static MethodCallExpression ToListCall(this Expression expression, Type elementType) 
+    public static MethodCallExpression ToListCall(this Expression expression, Type elementType)
         => Expression.Call
            (
                LinqMethods.EnumerableToListMethod.MakeGenericMethod(elementType),
@@ -43,7 +44,7 @@ internal static class ExpressionExt
            );
 
 
-    public static MethodCallExpression ToArrayCall(this Expression expression, Type elementType) 
+    public static MethodCallExpression ToArrayCall(this Expression expression, Type elementType)
         => Expression.Call
            (
                LinqMethods.EnumerableToArrayMethod.MakeGenericMethod(elementType),

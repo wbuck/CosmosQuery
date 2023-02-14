@@ -21,11 +21,11 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
  */
+using CosmosQuery.Settings;
 using Microsoft.AspNetCore.OData.Query;
 using Microsoft.OData.Edm;
-using System.Diagnostics.CodeAnalysis;
 
-namespace CosmosQuery
+namespace CosmosQuery.Extensions
 {
     internal static class ODataQueryContextExtentions
     {
@@ -37,12 +37,12 @@ namespace CosmosQuery
 
             return schemaElement is not null
                 ? FindProperties(schemaElement)
-                : null;            
+                : null;
 
             IEdmSchemaElement? GetSchemaElement() =>
                 context.Model.SchemaElements
                     .FirstOrDefault(e => (e is IEdmEntityType || e is IEdmComplexType) && e.Name == type.Name);
-            
+
             static OrderBySetting? FindProperties(IEdmSchemaElement schemaElement)
             {
                 var propertyNames = schemaElement switch
@@ -64,13 +64,13 @@ namespace CosmosQuery
                     return settings.ThenBy;
                 });
                 return orderBySettings.Name is null ? null : orderBySettings;
-            }                              
+            }
         }
 
         private static bool ContainsKey(this IEdmEntityType entityType)
             => entityType.Key().Any();
 
-        private static IEnumerable<string> GetSortableProperties(this IEdmStructuredType structuredType) 
+        private static IEnumerable<string> GetSortableProperties(this IEdmStructuredType structuredType)
             => structuredType.StructuralProperties()
                 .Where(p => p.Type.IsPrimitive() && !p.Type.IsStream())
                 .Select(p => p.Name)

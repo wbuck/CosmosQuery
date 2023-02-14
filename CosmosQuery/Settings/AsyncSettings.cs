@@ -21,14 +21,13 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
  */
-namespace CosmosQuery
+namespace CosmosQuery;
+
+public class AsyncSettings
 {
-    public class AsyncSettings
-    {
-        /// <summary>
-        /// <summary>
-        /// Gets or sets a cancellation token for async requests.
-        /// </summary>
-        public CancellationToken CancellationToken { get; set; }
-    }
+    /// <summary>
+    /// <summary>
+    /// Gets or sets a cancellation token for async requests.
+    /// </summary>
+    public CancellationToken CancellationToken { get; set; }
 }

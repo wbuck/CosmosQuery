@@ -1,12 +1,13 @@
-﻿using CosmosQuery.Visitors;
+﻿using CosmosQuery;
+using CosmosQuery.Settings;
+using CosmosQuery.Visitors;
 using LogicBuilder.Expressions.Utils;
-using LogicBuilder.Expressions.Utils.Expansions;
 using Microsoft.AspNetCore.OData.Query;
 using Microsoft.OData.UriParser;
 using System.Linq.Expressions;
 using System.Reflection;
 
-namespace CosmosQuery
+namespace CosmosQuery.Extensions
 {
     public static class LinqExtensions
     {
@@ -67,7 +68,7 @@ namespace CosmosQuery
             HandleNullPropagationOption handleNullPropagation = HandleNullPropagationOption.Default,
             TimeZoneInfo? timeZone = null)
         {
-            if (options is null || (options.Filter is null && options.Search is null))
+            if (options is null || options.Filter is null && options.Search is null)
             {
                 return null;
             }
@@ -106,7 +107,7 @@ namespace CosmosQuery
         /// <param name="oDataSettings"></param>
         /// <returns></returns>
         public static Expression<Func<IQueryable<T>, IQueryable<T>>>? GetQueryableExpression<T>(
-            this ODataQueryOptions<T> options, 
+            this ODataQueryOptions<T> options,
             ODataSettings? oDataSettings = null)
         {
             if (NoQueryableMethod(options, oDataSettings))
@@ -133,7 +134,7 @@ namespace CosmosQuery
             );
 
             int? GetPageSize() => (settings?.PageSize, options.Top) switch
-            {                
+            {
                 (null, null) => null,
                 (null, TopQueryOption top) => top.Value,
                 (int size, null) => size,
@@ -179,7 +180,7 @@ namespace CosmosQuery
                 ? GetMethodCall()
                 : GetMethodCall().GetPrimitiveThenByCall(orderByClause.ThenBy);
 
-            Expression GetMethodCall() 
+            Expression GetMethodCall()
                 => expression.GetPrimitiveOrderByCall
                 (
                      orderByClause.Direction == OrderByDirection.Ascending
@@ -205,7 +206,7 @@ namespace CosmosQuery
                         : GetDirection(orderByClause.Direction)
                 );
 
-            string GetDirection(OrderByDirection direction) 
+            string GetDirection(OrderByDirection direction)
                 => direction == OrderByDirection.Ascending ? OrderBy : OrderByDescending;
         }
 
@@ -223,7 +224,7 @@ namespace CosmosQuery
                 Expression.Lambda(parameter, parameter)
             );
         }
-            
+
 
 
         private static Expression GetDefaultThenByCall(this Expression expression, OrderBySetting settings)
@@ -279,7 +280,7 @@ namespace CosmosQuery
                             orderByClause.Direction == OrderByDirection.Ascending
                                 ? OrderBy
                                 : OrderByDescending
-                        );                        
+                        );
                     default:
                         SingleValuePropertyAccessNode propertyNode = (SingleValuePropertyAccessNode)orderByNode;
                         return expression.GetOrderByCall
@@ -471,7 +472,7 @@ namespace CosmosQuery
                     countSelector
                 )
             );
-        }        
+        }
 
         public static Expression GetOrderByCall(this Expression expression, string memberFullName, string methodName, string selectorParameterName = "a")
         {
@@ -492,8 +493,8 @@ namespace CosmosQuery
             var parameters = new Dictionary<string, ParameterExpression>();
             return new FilterHelper(parameters, context)
                 .GetFilterPart(filterClause.Expression)
-                .GetFilter(type, parameters, filterClause.RangeVariable.Name);                
-        }        
+                .GetFilter(type, parameters, filterClause.RangeVariable.Name);
+        }
 
         /// <summary>
         /// Creates a list of navigation expressions from the list of period delimited navigation properties.
@@ -503,7 +504,7 @@ namespace CosmosQuery
         /// <returns></returns>
         public static IEnumerable<Expression<Func<TSource, object>>> BuildIncludes<TSource>(this IEnumerable<string> includes)
             where TSource : class
-            => includes.Select(include => BuildSelectorExpression<TSource>(include)).ToList();        
+            => includes.Select(include => BuildSelectorExpression<TSource>(include)).ToList();
 
         private static Expression<Func<TSource, object>> BuildSelectorExpression<TSource>(string fullName, string parameterName = "i")
         {

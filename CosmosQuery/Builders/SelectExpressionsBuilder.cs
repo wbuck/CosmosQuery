@@ -2,7 +2,7 @@
 using System.Linq.Expressions;
 using LogicBuilder.Expressions.Utils;
 using AutoMapper.Internal;
-
+using CosmosQuery.Cache;
 
 namespace CosmosQuery;
 

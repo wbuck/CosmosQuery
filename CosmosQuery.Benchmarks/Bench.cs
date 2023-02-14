@@ -6,6 +6,7 @@ using CosmosQuery.Benchmarks.Data.Entities;
 using CosmosQuery.Benchmarks.Data.Mappings;
 using CosmosQuery.Benchmarks.Data.Models;
 using CosmosQuery.Benchmarks.Infrastructure;
+using CosmosQuery.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.OData;
 using Microsoft.AspNetCore.OData.Query;

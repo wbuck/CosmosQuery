@@ -24,7 +24,7 @@ SOFTWARE.
 using Microsoft.AspNetCore.OData.Extensions;
 using Microsoft.AspNetCore.OData.Query;
 
-namespace CosmosQuery
+namespace CosmosQuery.Extensions
 {
     internal static class ODataQueryOptionsExtensions
     {

@@ -2,32 +2,32 @@
 using System.Linq.Expressions;
 using System.Reflection;
 
-namespace CosmosQuery;
+namespace CosmosQuery.Cache;
 internal class LinqMethods
 {
     private static readonly MethodInfo _queryableWhereMethod =
-        GetGenericMethod(_ => Queryable.Where(default(IQueryable<int>)!, default(Expression<Func<int, bool>>)!));
+        GetGenericMethod(_ => default(IQueryable<int>)!.Where(default(Expression<Func<int, bool>>)!));
 
     private static readonly MethodInfo _enumerableWhereMethod =
-        GetGenericMethod(_ => Enumerable.Where(default(IEnumerable<bool>)!, i => i));
+        GetGenericMethod(_ => default(IEnumerable<bool>)!.Where(i => i));
 
     private static readonly MethodInfo _queryableSelectMethod =
-        GetGenericMethod(_ => Queryable.Select(default(IQueryable<int>)!, i => i));
+        GetGenericMethod(_ => default(IQueryable<int>)!.Select(i => i));
 
     private static readonly MethodInfo _enumerableSelectMethod =
-        GetGenericMethod(_ => Enumerable.Select(default(IEnumerable<int>)!, i => i));
+        GetGenericMethod(_ => default(IEnumerable<int>)!.Select(i => i));
 
     private static readonly MethodInfo _enumerableNonEmptyAnyMethod =
-        GetGenericMethod(_ => Enumerable.Any(default(IEnumerable<int>)!, default!));
+        GetGenericMethod(_ => default(IEnumerable<int>)!.Any(default!));
 
     private static readonly MethodInfo _enumerableEmptyAnyMethod =
-        GetGenericMethod(_ => Enumerable.Any(default(IEnumerable<int>)!));
+        GetGenericMethod(_ => default(IEnumerable<int>)!.Any());
 
     private static readonly MethodInfo _queryableTakeMethod =
-        GetGenericMethod(_ => Queryable.Take(default(IQueryable<int>)!, 0));
+        GetGenericMethod(_ => default(IQueryable<int>)!.Take(0));
 
     private static readonly MethodInfo _queryableSkipMethod =
-       GetGenericMethod(_ => Queryable.Skip(default(IQueryable<int>)!, 0));
+       GetGenericMethod(_ => default(IQueryable<int>)!.Skip(0));
 
     private static readonly MethodInfo _enumerableOrderByMethod =
         GetGenericMethod(_ => Enumerable.OrderBy(default(IQueryable<int>)!, i => i));
@@ -36,10 +36,10 @@ internal class LinqMethods
         GetGenericMethod(_ => Enumerable.OrderByDescending(default(IQueryable<int>)!, i => i));
 
     private static readonly MethodInfo _enumerableToListMethod =
-        GetGenericMethod(_ => Enumerable.ToList(default(IEnumerable<int>)!));
+        GetGenericMethod(_ => default(IEnumerable<int>)!.ToList());
 
     private static readonly MethodInfo _enumerableToArrayMethod =
-        GetGenericMethod(_ => Enumerable.ToArray(default(IEnumerable<int>)!));
+        GetGenericMethod(_ => default(IEnumerable<int>)!.ToArray());
 
     public static MethodInfo EnumerableWhereMethod =>
         _enumerableWhereMethod;
