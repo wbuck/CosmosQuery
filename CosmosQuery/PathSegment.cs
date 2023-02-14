@@ -1,11 +1,12 @@
 ﻿
+using CosmosQuery.Extensions;
 using LogicBuilder.Expressions.Utils;
 using Microsoft.OData.Edm;
 using System.Reflection;
 
 namespace CosmosQuery;
 
-internal record struct PathSegment
+internal readonly record struct PathSegment
 {
     public PathSegment(
         MemberInfo member,

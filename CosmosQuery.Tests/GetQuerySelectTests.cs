@@ -6,6 +6,7 @@ using CosmosQuery.Tests.Data.Models;
 using Microsoft.AspNetCore.OData;
 using Microsoft.AspNetCore.OData.Query;
 using IConfigurationProvider = AutoMapper.IConfigurationProvider;
+using CosmosQuery.Extensions;
 
 namespace CosmosQuery.Tests;
 

@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.OData.Query;
 using Microsoft.Azure.Cosmos;
 using System.Text.Json;
 using IConfigurationProvider = AutoMapper.IConfigurationProvider;
+using CosmosQuery.Extensions;
 
 namespace CosmosQuery.Tests;
 

@@ -1,4 +1,5 @@
-﻿using LogicBuilder.Expressions.Utils;
+﻿using CosmosQuery.Cache;
+using LogicBuilder.Expressions.Utils;
 using System.Linq.Expressions;
 
 namespace CosmosQuery.Visitors

@@ -1,5 +1,6 @@
 using AgileObjects.ReadableExpressions;
 using CosmosQuery;
+using CosmosQuery.Extensions;
 using Microsoft.AspNetCore.OData;
 using Microsoft.AspNetCore.OData.Query;
 using QueryExpression.Tests.Data.Entities;
@@ -283,6 +284,20 @@ public sealed class QueryTests
         Assert.Matches(pattern, actual);
     }
 
+    //[Theory]
+    //[InlineData
+    //(
+    //    "/forest?$expand=DomainControllers/Entry/Dc&$orderby=DomainControllers/Entry/Dc/$count",
+    //    @"FsmoRoles=\(\(FsmoRoleModel\[]\)dtoDomainControllerEntry\.Entry\.Dc\.FsmoRoles\)\.OrderBy\(p=>p\)\.ThenBy\(p=>p\)\.ToArray\(\)"
+    //)]
+    //public void QueryMethod_OrderByCount_ShouldProduceCorrectExpressions(string query, string pattern)
+    //{
+    //    string actual = Get<Forest, ForestModel>(this.queryable, query).GetString();
+    //    Assert.Matches(pattern, actual);
+    //}
+
+
+
     private IQueryable<TModel> Get<TEntity, TModel>(IQueryable<TEntity> queryable, string query, ODataQueryOptions<TModel>? options = null, QuerySettings? querySettings = null)
         where TEntity : class
         where TModel : class        
@@ -298,12 +313,14 @@ public sealed class QueryTests
 
         IQueryable<TModel> DoGet(IQueryable<TEntity> dataQueryable, IMapper mapper)
         {
-            return dataQueryable.GetQuery
+            IQueryable<TModel> queryable = dataQueryable.GetQuery
             (
                 mapper,
                 options ?? GetODataQueryOptions<TModel>(query),
                 querySettings!
             );
+
+            return queryable;
         }
     }
 

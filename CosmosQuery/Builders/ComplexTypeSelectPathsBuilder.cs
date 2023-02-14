@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using CosmosQuery.Cache;
 using LogicBuilder.Expressions.Utils;
 using Microsoft.OData.Edm;
 using System.Reflection;
@@ -7,8 +8,16 @@ namespace CosmosQuery;
 
 internal static class ComplexTypeSelectPathsBuilder
 {
-    public static List<List<PathSegment>> GetValueAndComplexMemberSelects(this Type parentType, IEdmModel edmModel) =>
-        parentType.GetValueTypeMembersSelects().Concat(edmModel.GetComplexTypeSelects(parentType)).ToList();
+    public static List<List<PathSegment>> GetValueAndComplexMemberSelects(this Type parentType, IEdmModel edmModel)
+    {
+        List<List<PathSegment>>? complexSelects = edmModel.GetComplexTypeSelects(parentType);
+        List<List<PathSegment>> valueTypeSelects = parentType.GetValueTypeMembersSelects();
+
+        return complexSelects is not null
+            ? valueTypeSelects.Concat(complexSelects).ToList()
+            : valueTypeSelects;
+    }
+        
 
     public static List<List<PathSegment>> GetValueTypeMembersSelects(this Type parentType, List<PathSegment>? pathSegments = null) =>
         parentType.GetValueOrListOfValueTypeMembers()
@@ -23,12 +32,12 @@ internal static class ComplexTypeSelectPathsBuilder
                 )
             }).ToList();
 
-    public static List<List<PathSegment>> GetComplexTypeSelects(this IEdmModel edmModel, Type parentType) =>
-       GetComplexTypeSelects(new(), new(), parentType, edmModel);
+    public static List<List<PathSegment>>? GetComplexTypeSelects(this IEdmModel edmModel, Type parentType) =>
+       GetComplexTypeSelects(null, null, parentType, edmModel);
 
-    private static List<List<PathSegment>> GetComplexTypeSelects(
-        List<List<PathSegment>> selects,
-        List<PathSegment> currentSelects,
+    private static List<List<PathSegment>>? GetComplexTypeSelects(
+        List<List<PathSegment>>? selects,
+        List<PathSegment>? currentSelects,
         Type parentType,
         IEdmModel edmModel,
         in int depth = 0)
@@ -37,6 +46,9 @@ internal static class ComplexTypeSelectPathsBuilder
 
         for (int i = 0; i < members.Count; ++i)
         {
+            selects ??= new();
+            currentSelects ??= new();
+
             MemberInfo member = members[i];
             Type memberType = member.GetMemberType();
 
@@ -68,12 +80,12 @@ internal static class ComplexTypeSelectPathsBuilder
 
     private static IReadOnlyList<MemberInfo> GetComplexMembers(this IEdmModel edmModel, Type parentType)
     {
-        MemberInfo[] members = parentType.GetFieldsAndProperties();
-        List<MemberInfo> complexMembers = new(members.Length);
+        IMemberCache cache = TypeCache.GetOrAdd(parentType);
+        List<MemberInfo> complexMembers = new(cache.Count);
 
         var complexTypes = edmModel.SchemaElements.OfType<IEdmComplexType>();
 
-        foreach (var member in members)
+        foreach (var member in cache.Values)
         {
             Type memberType = member.GetMemberType().GetCurrentType();
 

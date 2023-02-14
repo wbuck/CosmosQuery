@@ -1,4 +1,6 @@
-﻿using LogicBuilder.Expressions.Utils;
+﻿using CosmosQuery.Cache;
+using CosmosQuery.Extensions;
+using LogicBuilder.Expressions.Utils;
 using Microsoft.AspNetCore.OData.Query;
 using Microsoft.OData.UriParser;
 using System.Linq.Expressions;

@@ -33,9 +33,7 @@ namespace CosmosQuery
             typeof(DateTimeOffset),
             typeof(DateTime),
             typeof(Date),
-#if NET6_0
             typeof(DateOnly)
-#endif
         };
 
         public static HashSet<Type> DateTimeRelatedTypes = new()
@@ -44,14 +42,12 @@ namespace CosmosQuery
             typeof(DateTime),
             typeof(TimeSpan),
             typeof(TimeOfDay),
-#if NET6_0
             typeof(TimeOnly),
             typeof(DateOnly),
-#endif
             typeof(Date)
         };
 
-        public static readonly Dictionary<EdmTypeStructure, Type> EdmToClrTypeMappings = new Dictionary<EdmTypeStructure, Type>
+        public static readonly Dictionary<EdmTypeStructure, Type> EdmToClrTypeMappings = new()
         {
             [new EdmTypeStructure("Edm.String", true)] = typeof(string),
             [new EdmTypeStructure("Edm.String", false)] = typeof(string),
