@@ -25,7 +25,7 @@ using Microsoft.OData.Edm;
 
 namespace CosmosQuery
 {
-    public struct EdmTypeStructure : IEquatable<EdmTypeStructure>
+    public readonly struct EdmTypeStructure : IEquatable<EdmTypeStructure>
     {
         public EdmTypeStructure(IEdmTypeReference edmTypeReference)
         {
@@ -49,5 +49,11 @@ namespace CosmosQuery
             => obj is EdmTypeStructure type && Equals(type);
 
         public override int GetHashCode() => FullName.GetHashCode();
+
+        public static bool operator ==(EdmTypeStructure lhs, EdmTypeStructure rhs)
+            => lhs.Equals(rhs);
+
+        public static bool operator !=(EdmTypeStructure lhs, EdmTypeStructure rhs)
+            => !(lhs == rhs);
     }
 }

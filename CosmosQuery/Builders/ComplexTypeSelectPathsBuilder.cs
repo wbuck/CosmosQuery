@@ -80,7 +80,6 @@ internal static class ComplexTypeSelectPathsBuilder
 
     private static IReadOnlyList<MemberInfo> GetComplexMembers(this IEdmModel edmModel, Type parentType)
     {
-        // TODO: CACHE OPTIONAL
         IMemberCache cache = TypeCache.GetOrAdd(parentType);
         List<MemberInfo> complexMembers = new(cache.Count);
 

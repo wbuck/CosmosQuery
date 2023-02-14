@@ -298,12 +298,14 @@ public sealed class QueryTests
 
         IQueryable<TModel> DoGet(IQueryable<TEntity> dataQueryable, IMapper mapper)
         {
-            return dataQueryable.GetQuery
+            IQueryable<TModel> queryable = dataQueryable.GetQuery
             (
                 mapper,
                 options ?? GetODataQueryOptions<TModel>(query),
                 querySettings!
             );
+
+            return queryable;
         }
     }
 

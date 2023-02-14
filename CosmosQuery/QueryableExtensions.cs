@@ -1,10 +1,10 @@
 ﻿using AutoMapper;
 using AutoMapper.Extensions.ExpressionMapping;
+using CosmosQuery.Cache;
 using CosmosQuery.Visitors;
 using LogicBuilder.Expressions.Utils;
 using Microsoft.AspNetCore.OData.Query;
 using Microsoft.Azure.Cosmos.Linq;
-using System.Linq;
 using System.Linq.Expressions;
 using System.Runtime.InteropServices;
 
@@ -50,7 +50,11 @@ public static class QueryableExtensions
         await query.ApplyCountQueryAsync(mapper, filter, options, querySettings)
             .ConfigureAwait(false);
 
-        return query.GetQueryable(mapper, options, querySettings, filter);
+        IQueryable<TModel> queryable = query.GetQueryable(mapper, options, querySettings, filter);
+
+        ClearCache(querySettings);
+
+        return queryable;
     }
 
     public static IQueryable<TModel> GetQuery<TModel, TData>(
@@ -70,7 +74,11 @@ public static class QueryableExtensions
         ApplyOptions(options, querySettings);
 
         query.ApplyCountQuery(mapper, filter, options);
-        return query.GetQueryable(mapper, options, querySettings, filter);
+        IQueryable<TModel> queryable = query.GetQueryable(mapper, options, querySettings, filter);
+
+        ClearCache(querySettings);
+
+        return queryable;
     }
 
     private static IQueryable<TModel> GetQueryable<TModel, TData>(this IQueryable<TData> query,
@@ -270,6 +278,12 @@ public static class QueryableExtensions
             Span<PathSegment> segments = CollectionsMarshal.AsSpan(pathSegments);
             return ref segments[^1];
         }
+    }
+
+    private static void ClearCache(QuerySettings? querySettings)
+    {
+        if (querySettings?.ClearTypeCache == true)
+            TypeCache.Clear();
     }
 
     private static CancellationToken GetCancellationToken(this QuerySettings? querySettings) =>
