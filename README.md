@@ -22,6 +22,7 @@ Currently CosmosQuery supports the following OData operations in both a query an
 3.	`$orderby`
 4.	`$top`
 5.	`$skip`
+6.  `$count`
 
 Although this library currently supports the use of `$orderby`, `$top`, and `$skip` within a subquery Cosmos DB does **not**.
 
