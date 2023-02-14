@@ -32,12 +32,6 @@ namespace CosmosQuery
 {
     internal static class TypeExtensions
     {
-        private const BindingFlags InstanceFlags =
-            BindingFlags.Public |
-            BindingFlags.Instance |
-            BindingFlags.FlattenHierarchy |
-            BindingFlags.IgnoreCase;
-
         private readonly static Lazy<IList<Type>> loadedType = new(
             () => GetAllTypes(AppDomain.CurrentDomain.GetAssemblies().Distinct().ToList()));
 
@@ -55,32 +49,11 @@ namespace CosmosQuery
             ).ToArray();
         }        
 
-        public static MemberInfo[] GetSelectedMembers(this Type parentType, List<string> selects)
-        {
-            if (selects == null || !selects.Any())
-                return parentType.GetValueTypeMembers();
-
-            return selects.Select(select => parentType.GetMemberInfo(select)).ToArray();
-        }
-
-        private static MemberInfo[] GetValueTypeMembers(this Type parentType)
-        {
-            if (parentType.IsList())
-                return Array.Empty<MemberInfo>();
-
-            IMemberCache cache = TypeCache.GetOrAdd(parentType);
-            return cache.Values.Where
-            (
-                info => (info.MemberType == MemberTypes.Field || info.MemberType == MemberTypes.Property)
-                && info.GetMemberType().IsLiteralType()
-            ).ToArray();
-        }
-
         public static Type GetClrType(string fullName, bool isNullable, IDictionary<EdmTypeStructure, Type> typesCache)
             => GetClrType(new EdmTypeStructure(fullName, isNullable), typesCache);
 
         public static Type GetClrType(IEdmTypeReference edmTypeReference, IDictionary<EdmTypeStructure, Type> typesCache)
-            => edmTypeReference == null
+            => edmTypeReference is null
                 ? typeof(object)
                 : GetClrType(new EdmTypeStructure(edmTypeReference), typesCache);
 
