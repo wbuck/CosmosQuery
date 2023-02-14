@@ -21,6 +21,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
  */
+using CosmosQuery.Cache;
 using LogicBuilder.Expressions.Utils;
 using Microsoft.AspNetCore.OData.Edm;
 using Microsoft.OData.Edm;
@@ -45,21 +46,14 @@ namespace CosmosQuery
             if (parentType.IsList())
                 return Array.Empty<MemberInfo>();
 
-            return parentType.GetMemberInfos().Where
+            IMemberCache cache = TypeCache.GetOrAdd(parentType);
+            return cache.Values.Where
             (
                 info =>
                    (info.MemberType == MemberTypes.Field || info.MemberType == MemberTypes.Property) &&
                    (info.GetMemberType().IsLiteralType() || info.IsListOfValueTypes())
             ).ToArray();
-        }
-
-        public static MemberInfo[] GetFieldsAndProperties(this Type parentType) =>
-            parentType.GetMemberInfos()
-                .Where(info => info.MemberType == MemberTypes.Field || info.MemberType == MemberTypes.Property)
-                .ToArray();
-
-        private static MemberInfo[] GetMemberInfos(this Type parentType)
-            => parentType.GetMembers(InstanceFlags);
+        }        
 
         public static MemberInfo[] GetSelectedMembers(this Type parentType, List<string> selects)
         {
@@ -74,7 +68,8 @@ namespace CosmosQuery
             if (parentType.IsList())
                 return Array.Empty<MemberInfo>();
 
-            return parentType.GetMemberInfos().Where
+            IMemberCache cache = TypeCache.GetOrAdd(parentType);
+            return cache.Values.Where
             (
                 info => (info.MemberType == MemberTypes.Field || info.MemberType == MemberTypes.Property)
                 && info.GetMemberType().IsLiteralType()

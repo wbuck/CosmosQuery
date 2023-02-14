@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using CosmosQuery.Cache;
 using LogicBuilder.Expressions.Utils;
 using Microsoft.OData.Edm;
 using System.Reflection;
@@ -68,12 +69,13 @@ internal static class ComplexTypeSelectPathsBuilder
 
     private static IReadOnlyList<MemberInfo> GetComplexMembers(this IEdmModel edmModel, Type parentType)
     {
-        MemberInfo[] members = parentType.GetFieldsAndProperties();
-        List<MemberInfo> complexMembers = new(members.Length);
+        // TODO: CACHE OPTIONAL
+        IMemberCache cache = TypeCache.GetOrAdd(parentType);
+        List<MemberInfo> complexMembers = new(cache.Count);
 
         var complexTypes = edmModel.SchemaElements.OfType<IEdmComplexType>();
 
-        foreach (var member in members)
+        foreach (var member in cache.Values)
         {
             Type memberType = member.GetMemberType().GetCurrentType();
 

@@ -23,11 +23,11 @@ SOFTWARE.
  */
 using System.Reflection;
 
-namespace CosmosQuery
+namespace CosmosQuery.Cache
 {
     public static class CustomMethodCache
     {
-        private static readonly Dictionary<string, MethodInfo> customMethods = new Dictionary<string, MethodInfo>();
+        private static readonly Dictionary<string, MethodInfo> customMethods = new();
 
         public static void CacheCustomMethod(string edmFunctionName, MethodInfo methodInfo)
             => customMethods.Add
