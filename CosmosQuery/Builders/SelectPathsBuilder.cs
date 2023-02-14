@@ -1,4 +1,5 @@
-﻿using LogicBuilder.Expressions.Utils;
+﻿using CosmosQuery.Cache;
+using LogicBuilder.Expressions.Utils;
 using Microsoft.AspNetCore.OData.Query;
 using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
@@ -156,14 +157,11 @@ internal static class SelectPathsBuilder
         var memberSelects = memberType.GetValueOrListOfValueTypeMembers()
             .Select(m => AddPathSegment(m, EdmTypeKind.Primitive, pathSegments.ToNewList()));
 
-        var complexPaths = edmModel.GetComplexTypeSelects(memberType).Select
-        (
-            paths =>
-            {
-                paths.InsertRange(0, pathSegments.ToNewList());
-                return paths;
-            }
-        );
+        List<List<PathSegment>>? complexSelects = edmModel.GetComplexTypeSelects(memberType);
+
+        var complexPaths = complexSelects is null
+            ? Enumerable.Empty<List<PathSegment>>()
+            : GetComplexPaths();
 
         paths.AddRange(memberSelects.Concat(complexPaths));
         return paths;
@@ -179,6 +177,16 @@ internal static class SelectPathsBuilder
             ));
             return pathSegments;
         }
+
+        IEnumerable<List<PathSegment>> GetComplexPaths() 
+            => complexSelects.Select
+            (
+                paths =>
+                {
+                    paths.InsertRange(0, pathSegments.ToNewList());
+                    return paths;
+                }
+            );
     }     
 
     private static QueryOptions? GetQuery(this ODataPathSegment pathSegment, ExpandedNavigationSelectItem pathSegments)

@@ -27,6 +27,7 @@ using Microsoft.AspNetCore.OData.Edm;
 using Microsoft.OData.Edm;
 using Microsoft.OData.ModelBuilder;
 using System.Reflection;
+using System.Resources;
 
 namespace CosmosQuery
 {
@@ -47,7 +48,30 @@ namespace CosmosQuery
                    (info.MemberType == MemberTypes.Field || info.MemberType == MemberTypes.Property) &&
                    (info.GetMemberType().IsLiteralType() || info.IsListOfValueTypes())
             ).ToArray();
-        }        
+        }
+
+        public static MemberInfo GetMemberInfo(this Type parentType, string memberName)
+        {
+            IMemberCache cache = TypeCache.GetOrAdd(parentType);
+
+            if (!cache.TryGetValue(memberName, out var info))
+            {
+                throw new InvalidOperationException(
+                    $"Member '{memberName}' cannot be found on parent of type '{parentType.Name}'");
+            }
+
+            if (info?.DeclaringType is not null && info.DeclaringType.FullName != parentType.FullName)
+            {
+                cache = TypeCache.GetOrAdd(info.DeclaringType);
+                if (!cache.TryGetValue(memberName, out info))
+                {
+                    throw new InvalidOperationException(
+                        $"Member '{memberName}' cannot be found on parent of type '{parentType.Name}'");
+                }
+            }
+
+            return info!;
+        }
 
         public static Type GetClrType(string fullName, bool isNullable, IDictionary<EdmTypeStructure, Type> typesCache)
             => GetClrType(new EdmTypeStructure(fullName, isNullable), typesCache);
