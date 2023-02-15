@@ -92,7 +92,7 @@ namespace CosmosQuery.Visitors
 
             Expression GetCall() => clause.Expression switch
             {
-                CountNode node => throw new NotImplementedException(),
+                CountNode node => GetOrderByCountCall(expression, clause, node, method),
                 _ => GetCallExpression(expression, clause.GetSelector(this.pathSegments), method)
             };
         }
@@ -112,9 +112,44 @@ namespace CosmosQuery.Visitors
 
             Expression GetCall() => clause.Expression switch
             {
-                CountNode node => throw new NotImplementedException(),
+                CountNode node => GetOrderByCountCall(expression, clause, node, method),
                 _ => GetCallExpression(expression, clause.GetSelector(this.pathSegments), method)
             };
+        }
+
+        private Expression GetOrderByCountCall(Expression expression, OrderByClause orderByClause, CountNode node, string methodName, string selectorParameterName = "a")
+        {                        
+            Type sourceType = expression.GetUnderlyingElementType();
+            ParameterExpression parameter = Expression.Parameter(sourceType, selectorParameterName);
+
+            Expression countSelector;
+            if (node.FilterClause is FilterClause filterClause)
+            {                
+                Expression memberExpression = parameter.GetMemeberAccessExpression(orderByClause.Expression, this.pathSegments);
+                Type elementType = memberExpression.GetUnderlyingElementType();
+
+                LambdaExpression filterExpression = filterClause.GenerateFilterExpression(elementType, this.context);                
+                countSelector = memberExpression.GetCountCall(filterExpression);
+            }
+            else
+            {
+                countSelector = parameter
+                    .GetMemeberAccessExpression(orderByClause.Expression, this.pathSegments)
+                    .GetCountCall();
+            }
+
+            Type collectionType = expression.Type.IsIQueryable()
+                ? typeof(Queryable)
+                : typeof(Enumerable);
+
+            return Expression.Call
+            (
+                collectionType,
+                methodName,
+                new[] { sourceType, countSelector.Type },
+                expression,
+                parameter.MakeLambdaExpression(countSelector)
+            );
         }
 
         private MethodCallExpression GetCallExpression(Expression expression, LambdaExpression selector, string methodName)

@@ -334,18 +334,15 @@ namespace CosmosQuery.Extensions
             }
         }
 
-        private static string GetPropertyPath(this CountNode countNode)
-        {
-            switch (countNode.Source)
+        public static string GetPropertyPath(this CountNode countNode)
+            => countNode.Source switch
             {
-                case CollectionNavigationNode navigationNode:
-                    return string.Join(".", new List<string>().GetReferencePath(navigationNode.Source, navigationNode.NavigationProperty.Name));
-                case null:
-                    throw new ArgumentNullException(nameof(countNode));
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(countNode));
-            }
-        }
+                CollectionNavigationNode navigationNode => string.Join('.', new List<string>().GetReferencePath(navigationNode.Source, navigationNode.NavigationProperty.Name)),
+                CollectionComplexNode complexNode => string.Join('.', new List<string>().GetReferencePath(complexNode.Source, complexNode.Property.Name)),
+                CollectionPropertyAccessNode accessNode => accessNode.Property.Name,
+                null => throw new ArgumentNullException(nameof(countNode)),
+                _ => throw new ArgumentOutOfRangeException(nameof(countNode)),
+            };
 
         public static string GetPropertyPath(this SingleValuePropertyAccessNode singleValuePropertyAccess)
             => singleValuePropertyAccess.Source switch

@@ -284,17 +284,104 @@ public sealed class QueryTests
         Assert.Matches(pattern, actual);
     }
 
-    //[Theory]
-    //[InlineData
-    //(
-    //    "/forest?$expand=DomainControllers/Entry/Dc&$orderby=DomainControllers/Entry/Dc/$count",
-    //    @"FsmoRoles=\(\(FsmoRoleModel\[]\)dtoDomainControllerEntry\.Entry\.Dc\.FsmoRoles\)\.OrderBy\(p=>p\)\.ThenBy\(p=>p\)\.ToArray\(\)"
-    //)]
-    //public void QueryMethod_OrderByCount_ShouldProduceCorrectExpressions(string query, string pattern)
-    //{
-    //    string actual = Get<Forest, ForestModel>(this.queryable, query).GetString();
-    //    Assert.Matches(pattern, actual);
-    //}
+    [Theory]
+    [InlineData
+    (
+        "/forest?$expand=DomainControllers/Entry/Dc($expand=Backups;$orderby=Backups/$count($filter=Location/NetworkInformation/Address eq 'SomeAddress') desc)",
+        @"OrderByDescending\(a=>a\.Entry\.Dc\.Backups\.Count\(it=>it\.Location\.NetworkInformation\.Address==TypedProperty\)\)"
+    )]
+    [InlineData
+    (
+        "/forest?$expand=DomainControllers/Entry/Dc($expand=Backups;$orderby=Backups/$count($filter=Location/NetworkInformation/Address eq 'SomeAddress'))",
+        @"OrderBy\(a=>a\.Entry\.Dc\.Backups\.Count\(it=>it\.Location\.NetworkInformation\.Address==TypedProperty\)\)"
+    )]
+    [InlineData
+    (
+        "/forest?$expand=DomainControllers/Entry/Dc&$orderby=DomainControllers/$count($filter=DcNetworkInformation/Address eq 'SomeAddress') desc",
+        @"OrderByDescending\(\$it=>\$it\.DomainControllers\.Count\(\$it=>\$it\.DcNetworkInformation\.Address==TypedProperty\)\)"
+    )]
+    [InlineData
+    (
+        "/forest?$expand=DomainControllers/Entry/Dc&$orderby=DomainControllers/$count($filter=DcNetworkInformation/Address eq 'SomeAddress')",
+        @"OrderBy\(\$it=>\$it\.DomainControllers\.Count\(\$it=>\$it\.DcNetworkInformation\.Address==TypedProperty\)\)"
+    )]
+    [InlineData
+    (
+        "/forest?$expand=DomainControllers/Entry/Dc&$orderby=DomainControllers/$count desc",
+        @"OrderByDescending\(\$it=>\$it\.DomainControllers\.Count\(\)\)"
+    )]
+    [InlineData
+    (
+        "/forest?$expand=DomainControllers/Entry/Dc&$orderby=DomainControllers/$count",
+        @"OrderBy\(\$it=>\$it\.DomainControllers\.Count\(\)\)"
+    )]
+    [InlineData
+    (
+        "/forest?$expand=DomainControllers/Entry/Dc($orderby=FsmoRoles/$count desc)",
+        @"OrderByDescending\(a=>a\.Entry\.Dc\.FsmoRoles\.Count\(\)\)"
+    )]
+    [InlineData
+    (
+        "/forest?$expand=DomainControllers/Entry/Dc($orderby=FsmoRoles/$count)",
+        @"OrderBy\(a=>a\.Entry\.Dc\.FsmoRoles\.Count\(\)\)"
+    )]
+    public void QueryMethod_OrderByCount_ShouldProduceCorrectExpressions(string query, string pattern)
+    {
+        string actual = Get<Forest, ForestModel>(this.queryable, query).GetString();
+        Assert.Matches(pattern, actual);
+    }
+
+    [Theory]
+    [InlineData
+    (
+        "/forest?$expand=DomainControllers/Entry/Dc&$orderby=ForestName,DomainControllers/$count",
+        @"OrderBy\(\$it=>\$it\.Name\)\.ThenBy\(a=>a\.DomainControllers\.Count\(\)\)"
+    )]
+    [InlineData
+    (
+        "/forest?$expand=DomainControllers/Entry/Dc&$orderby=ForestName,DomainControllers/$count desc",
+        @"OrderBy\(\$it=>\$it\.Name\)\.ThenByDescending\(a=>a\.DomainControllers\.Count\(\)\)"
+    )]
+    [InlineData
+    (
+        "/forest?$expand=DomainControllers/Entry/Dc($expand=Backups;$orderby=FullyQualifiedDomainName,Backups/$count($filter=Location/NetworkInformation/Address eq 'SomeAddress'))",
+        @"OrderBy\(it=>it\.Entry\.Dc\.FullyQualifiedDomainName\)\.ThenBy\(a=>a\.Entry\.Dc\.Backups\.Count\(it=>it\.Location\.NetworkInformation\.Address==TypedProperty\)\)"
+    )]
+    [InlineData
+    (
+        "/forest?$expand=DomainControllers/Entry/Dc($expand=Backups;$orderby=FullyQualifiedDomainName,Backups/$count($filter=Location/NetworkInformation/Address eq 'SomeAddress') desc)",
+        @"OrderBy\(it=>it\.Entry\.Dc\.FullyQualifiedDomainName\)\.ThenByDescending\(a=>a\.Entry\.Dc\.Backups\.Count\(it=>it\.Location\.NetworkInformation\.Address==TypedProperty\)\)"
+    )]
+    [InlineData
+    (
+        "/forest?$expand=DomainControllers/Entry/Dc($orderby=FsmoRoles/$count,FullyQualifiedDomainName desc)",
+        @"OrderBy\(a=>a\.Entry\.Dc\.FsmoRoles\.Count\(\)\)\.ThenByDescending\(it=>it\.Entry\.Dc\.FullyQualifiedDomainName\)"
+    )]
+    [InlineData
+    (
+        "/forest?$expand=DomainControllers/Entry/Dc($orderby=FsmoRoles/$count,FullyQualifiedDomainName)",
+        @"OrderBy\(a=>a\.Entry\.Dc\.FsmoRoles\.Count\(\)\)\.ThenBy\(it=>it\.Entry\.Dc\.FullyQualifiedDomainName\)"
+    )]
+    [InlineData
+    (
+        "/forest?$expand=DomainControllers/Entry/Dc($orderby=FullyQualifiedDomainName,FsmoRoles/$count desc)",
+        @"OrderBy\(it=>it\.Entry\.Dc\.FullyQualifiedDomainName\)\.ThenByDescending\(a=>a\.Entry\.Dc\.FsmoRoles\.Count\(\)\)"
+    )]
+    [InlineData
+    (
+        "/forest?$expand=DomainControllers/Entry/Dc($orderby=FullyQualifiedDomainName desc,FsmoRoles/$count desc)",
+        @"OrderByDescending\(it=>it\.Entry\.Dc\.FullyQualifiedDomainName\)\.ThenByDescending\(a=>a\.Entry\.Dc\.FsmoRoles\.Count\(\)\)"
+    )]
+    [InlineData
+    (
+        "/forest?$expand=DomainControllers/Entry/Dc($orderby=FullyQualifiedDomainName,FsmoRoles/$count)",
+        @"OrderBy\(it=>it\.Entry\.Dc\.FullyQualifiedDomainName\)\.ThenBy\(a=>a\.Entry\.Dc\.FsmoRoles\.Count\(\)\)"
+    )]
+    public void QueryMethod_ThenByCount_ShouldProduceCorrectExpressions(string query, string pattern)
+    {
+        string actual = Get<Forest, ForestModel>(this.queryable, query).GetString();
+        Assert.Matches(pattern, actual);
+    }
 
 
 

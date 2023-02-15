@@ -1103,10 +1103,7 @@ public sealed class GetQueryTests
     {
         var cancelledToken = new CancellationTokenSource(TimeSpan.Zero).Token;
         await Assert.ThrowsAnyAsync<OperationCanceledException>(() => 
-            GetAsync<ForestModel, Forest>("/forest?$count=true", querySettings: new QuerySettings 
-            { 
-                AsyncSettings = new AsyncSettings { CancellationToken = cancelledToken } 
-            }));
+            GetAsync<ForestModel, Forest>("/forest?$count=true", cancellationToken: cancelledToken));
     }
 
     private Task<ICollection<TModel>> GetUsingCustomNameSpace<TModel, TData>(string query,
@@ -1143,7 +1140,11 @@ public sealed class GetQueryTests
 
 
     private async Task<ICollection<TModel>> GetAsync<TModel, TData>(
-        string query, ODataQueryOptions<TModel>? options = null, QuerySettings? querySettings = null, string? customNamespace = null)
+        string query, 
+        ODataQueryOptions<TModel>? options = null, 
+        QuerySettings? querySettings = null, 
+        string? customNamespace = null, 
+        CancellationToken cancellationToken = default)
         where TModel : class
         where TData : class
     {
@@ -1162,7 +1163,8 @@ public sealed class GetQueryTests
             (
                 mapper,
                 options ?? GetODataQueryOptions<TModel>(query, customNamespace),
-                querySettings!
+                querySettings!,
+                cancellationToken
             );
         }
     }

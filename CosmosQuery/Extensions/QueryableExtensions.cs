@@ -16,30 +16,30 @@ public static class QueryableExtensions
         IMapper mapper, ODataQueryOptions<TModel> options, QuerySettings? querySettings = null)
          where TModel : class
     {
-        IQueryable<TModel> modelQuery = query.GetQuery(mapper, options, querySettings);
+        IQueryable<TModel> modelQuery = GetQuery(query, mapper, options, querySettings);
         return modelQuery.ToArray();
     }
 
     public static async Task<ICollection<TModel>> GetAsync<TModel, TData>(this IQueryable<TData> query,
-        IMapper mapper, ODataQueryOptions<TModel> options, QuerySettings? querySettings = null)
+        IMapper mapper, ODataQueryOptions<TModel> options, QuerySettings? querySettings = null, CancellationToken cancellationToken = default)
             where TModel : class
     {
         IQueryable<TModel> modelQuery =
-            await query.GetQueryAsync(mapper, options, querySettings).ConfigureAwait(false);
+            await GetQueryAsync(query, mapper, options, querySettings, cancellationToken).ConfigureAwait(false);
 
-        return await modelQuery.ExecuteQueryAsync(querySettings.GetCancellationToken())
-            .ConfigureAwait(false);
+        return await modelQuery.ExecuteQueryAsync(cancellationToken).ConfigureAwait(false);
     }
 
     public static async Task<IQueryable<TModel>> GetQueryAsync<TModel, TData>(
         this IQueryable<TData> query,
         IMapper mapper,
         ODataQueryOptions<TModel> options,
-        QuerySettings? querySettings = null) where TModel : class
+        QuerySettings? querySettings = null,
+        CancellationToken cancellationToken = default) where TModel : class
     {
-        query = query ?? throw new ArgumentNullException(nameof(query));
-        mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
-        options = options ?? throw new ArgumentNullException(nameof(options));
+        ArgumentNullException.ThrowIfNull(query);
+        ArgumentNullException.ThrowIfNull(mapper);
+        ArgumentNullException.ThrowIfNull(options);
 
         Expression<Func<TModel, bool>>? filter = options.ToFilterExpression(
             querySettings?.ODataSettings?.HandleNullPropagation ?? HandleNullPropagationOption.False,
@@ -47,8 +47,7 @@ public static class QueryableExtensions
 
         ApplyOptions(options, querySettings);
 
-        await query.ApplyCountQueryAsync(mapper, filter, options, querySettings)
-            .ConfigureAwait(false);
+        await query.ApplyCountQueryAsync(mapper, filter, options, cancellationToken).ConfigureAwait(false);
 
         IQueryable<TModel> queryable = query.GetQueryable(mapper, options, querySettings, filter);
 
@@ -63,9 +62,9 @@ public static class QueryableExtensions
         ODataQueryOptions<TModel> options,
         QuerySettings? querySettings = null) where TModel : class
     {
-        query = query ?? throw new ArgumentNullException(nameof(query));
-        mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
-        options = options ?? throw new ArgumentNullException(nameof(options));
+        ArgumentNullException.ThrowIfNull(query);
+        ArgumentNullException.ThrowIfNull(mapper);
+        ArgumentNullException.ThrowIfNull(options);
 
         Expression<Func<TModel, bool>>? filter = options.ToFilterExpression(
             querySettings?.ODataSettings?.HandleNullPropagation ?? HandleNullPropagationOption.False,
@@ -182,13 +181,13 @@ public static class QueryableExtensions
         IMapper mapper,
         Expression<Func<TModel, bool>>? filter,
         ODataQueryOptions<TModel> options,
-        QuerySettings? querySettings)
+        CancellationToken cancellationToken)
     {
         if (options.Count?.Value == true)
         {
             options.AddCountOptionsResult
             (
-                await query.QueryCountAsync(mapper, filter, querySettings.GetCancellationToken())
+                await query.QueryCountAsync(mapper, filter, cancellationToken)
                     .ConfigureAwait(false)
             );
         }
@@ -197,7 +196,7 @@ public static class QueryableExtensions
     private static async Task<int> QueryCountAsync<TModel, TData>(this IQueryable<TData> query,
         IMapper mapper,
         Expression<Func<TModel, bool>>? filter,
-        CancellationToken cancellationToken = default)
+        CancellationToken cancellationToken)
     {
         if (filter is not null)
         {
@@ -210,7 +209,7 @@ public static class QueryableExtensions
     }
 
     private static async Task<ICollection<TModel>> ExecuteQueryAsync<TModel>(
-        this IQueryable<TModel> query, CancellationToken cancellationToken = default)
+        this IQueryable<TModel> query, CancellationToken cancellationToken)
     {
         using var iterator = query.ToFeedIterator();
         return
@@ -285,7 +284,4 @@ public static class QueryableExtensions
         if (querySettings?.ClearTypeCache == true)
             TypeCache.Clear();
     }
-
-    private static CancellationToken GetCancellationToken(this QuerySettings? querySettings) =>
-        querySettings?.AsyncSettings?.CancellationToken ?? CancellationToken.None;
 }

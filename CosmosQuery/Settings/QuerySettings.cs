@@ -39,11 +39,6 @@ public sealed record QuerySettings
     public ProjectionSettings? ProjectionSettings { get; init; }
 
     /// <summary>
-    /// Async Settings hold the cancellation token for async requests
-    /// </summary>
-    public AsyncSettings? AsyncSettings { get; init; }
-
-    /// <summary>
     /// CosmosQuery caches reflected types and uses those cached types in subsequent 
     /// queries. To clear the type cache after each query set this property to true.
     /// </summary>
