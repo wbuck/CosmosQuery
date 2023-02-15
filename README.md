@@ -117,13 +117,15 @@ public static async Task<ICollection<TModel>> GetAsync<TModel, TData>(
     this IQueryable<TData> query, 
     IMapper mapper, 
     ODataQueryOptions<TModel> options, 
-    QuerySettings? querySettings = null);
+    QuerySettings? querySettings = null,
+    CancellationToken cancellationToken = default);
 
 public static async Task<IQueryable<TModel>> GetQueryAsync<TModel, TData>(
     this IQueryable<TData> query, 
     IMapper mapper, 
     ODataQueryOptions<TModel> options, 
-    QuerySettings? querySettings = null);
+    QuerySettings? querySettings = null,
+    CancellationToken cancellationToken = default);
 ```
 
 [AutoMapper]: https://github.com/AutoMapper/AutoMapper
