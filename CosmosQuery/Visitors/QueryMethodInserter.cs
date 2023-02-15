@@ -4,7 +4,6 @@ using CosmosQuery.Settings;
 using LogicBuilder.Expressions.Utils;
 using Microsoft.AspNetCore.OData.Query;
 using Microsoft.OData.UriParser;
-using System.Diagnostics;
 using System.Linq.Expressions;
 
 namespace CosmosQuery.Visitors

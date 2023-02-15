@@ -4,7 +4,6 @@ using CosmosQuery.Visitors;
 using Microsoft.AspNetCore.OData.Query;
 using Microsoft.OData.UriParser;
 using System.Linq.Expressions;
-using System.Reflection.Metadata;
 
 namespace CosmosQuery.Extensions;
 internal static class ExpressionExt

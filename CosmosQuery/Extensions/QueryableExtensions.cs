@@ -16,7 +16,7 @@ public static class QueryableExtensions
         IMapper mapper, ODataQueryOptions<TModel> options, QuerySettings? querySettings = null)
          where TModel : class
     {
-        IQueryable<TModel> modelQuery = query.GetQuery(mapper, options, querySettings);
+        IQueryable<TModel> modelQuery = GetQuery(query, mapper, options, querySettings);
         return modelQuery.ToArray();
     }
 
@@ -25,7 +25,7 @@ public static class QueryableExtensions
             where TModel : class
     {
         IQueryable<TModel> modelQuery =
-            await query.GetQueryAsync(mapper, options, querySettings).ConfigureAwait(false);
+            await GetQueryAsync(query, mapper, options, querySettings).ConfigureAwait(false);
 
         return await modelQuery.ExecuteQueryAsync(querySettings.GetCancellationToken())
             .ConfigureAwait(false);
@@ -37,9 +37,9 @@ public static class QueryableExtensions
         ODataQueryOptions<TModel> options,
         QuerySettings? querySettings = null) where TModel : class
     {
-        query = query ?? throw new ArgumentNullException(nameof(query));
-        mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
-        options = options ?? throw new ArgumentNullException(nameof(options));
+        ArgumentNullException.ThrowIfNull(query);
+        ArgumentNullException.ThrowIfNull(mapper);
+        ArgumentNullException.ThrowIfNull(options);
 
         Expression<Func<TModel, bool>>? filter = options.ToFilterExpression(
             querySettings?.ODataSettings?.HandleNullPropagation ?? HandleNullPropagationOption.False,
@@ -63,9 +63,9 @@ public static class QueryableExtensions
         ODataQueryOptions<TModel> options,
         QuerySettings? querySettings = null) where TModel : class
     {
-        query = query ?? throw new ArgumentNullException(nameof(query));
-        mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
-        options = options ?? throw new ArgumentNullException(nameof(options));
+        ArgumentNullException.ThrowIfNull(query);
+        ArgumentNullException.ThrowIfNull(mapper);
+        ArgumentNullException.ThrowIfNull(options);
 
         Expression<Func<TModel, bool>>? filter = options.ToFilterExpression(
             querySettings?.ODataSettings?.HandleNullPropagation ?? HandleNullPropagationOption.False,
