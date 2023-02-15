@@ -339,7 +339,7 @@ namespace CosmosQuery.Extensions
             {
                 CollectionNavigationNode navigationNode => string.Join('.', new List<string>().GetReferencePath(navigationNode.Source, navigationNode.NavigationProperty.Name)),
                 CollectionComplexNode complexNode => string.Join('.', new List<string>().GetReferencePath(complexNode.Source, complexNode.Property.Name)),
-                CollectionPropertyAccessNode accessNode => string.Join('.', new List<string>().GetReferencePath(accessNode.Source, accessNode.Property.Name)),
+                CollectionPropertyAccessNode accessNode => accessNode.Property.Name,
                 null => throw new ArgumentNullException(nameof(countNode)),
                 _ => throw new ArgumentOutOfRangeException(nameof(countNode)),
             };
@@ -371,24 +371,6 @@ namespace CosmosQuery.Extensions
 
         public static string GetPropertyPath(this CollectionNavigationNode collectionNavigationNode)
             => $"{string.Join(".", new List<string>().GetReferencePath(collectionNavigationNode.Source, collectionNavigationNode.NavigationProperty.Name))}";
-
-        public static List<string> GetReferencePath(this List<string> list, SingleValueNode singleValueNode, string propertyName)
-        {
-            switch (singleValueNode)
-            {
-                case SingleNavigationNode sourceNode:
-                    list.GetReferencePath(sourceNode.Source, sourceNode.NavigationProperty.Name);
-                    list.Add(propertyName);
-                    return list;
-                case SingleComplexNode complexNode:
-                    list.GetReferencePath(complexNode.Source, complexNode.Property.Name);
-                    list.Add(propertyName);
-                    return list;
-                default:
-                    list.Add(propertyName);
-                    return list;
-            }
-        }
 
         public static List<string> GetReferencePath(this List<string> list, SingleResourceNode singleResourceNode, string propertyName)
         {
