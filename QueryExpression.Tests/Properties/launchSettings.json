@@ -3,10 +3,10 @@
     "QueryExpression.Tests": {
       "commandName": "Project",
       "launchBrowser": true,
+      "applicationUrl": "https://localhost:64662;http://localhost:64663",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
-      },
-      "applicationUrl": "https://localhost:64662;http://localhost:64663"
+      }
     }
   }
 }
