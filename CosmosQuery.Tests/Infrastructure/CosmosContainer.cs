@@ -76,7 +76,6 @@ public sealed class CosmosContainer : IAsyncLifetime
     private static CosmosClient CreateCosmosClient(string endpoint, string key) =>
         new(endpoint, key, new()
         {
-            AllowBulkExecution = true,
             SerializerOptions = new() { PropertyNamingPolicy = CosmosPropertyNamingPolicy.CamelCase }
         });
 
@@ -85,7 +84,6 @@ public sealed class CosmosContainer : IAsyncLifetime
         {
             ConnectionMode = ConnectionMode.Gateway,
             HttpClientFactory = () => testContainer!.HttpClient,
-            AllowBulkExecution = true,
             SerializerOptions = new() { PropertyNamingPolicy = CosmosPropertyNamingPolicy.CamelCase }
         });
 

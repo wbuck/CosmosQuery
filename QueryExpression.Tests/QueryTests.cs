@@ -15,7 +15,7 @@ internal static class QueryableExtensions
 {
     public static string GetString<TModel>(this IQueryable<TModel> queryable) where TModel : class
         => queryable.Expression.ToReadableString()
-            .Replace("\r\n", string.Empty)
+            .ReplaceLineEndings(string.Empty)
             .Replace(" ", string.Empty);
 }
 

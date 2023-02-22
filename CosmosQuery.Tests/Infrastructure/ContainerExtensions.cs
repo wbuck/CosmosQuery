@@ -5,17 +5,13 @@ namespace CosmosQuery.Tests.Infrastructure;
 
 internal static class ContainerExtensions
 {
-    public static Task SeedAsync(this Container dbContainer, CancellationToken cancellationToken = default)
+    public static async Task SeedAsync(this Container dbContainer, CancellationToken cancellationToken = default)
     {
         var data = DatabaseSeeder.GenerateData();
-        var tasks = new List<Task>(data.Count);
-
         foreach (var forest in data)
         {
             var key = new PartitionKey(forest.ForestId.ToString());
-            tasks.Add(dbContainer.CreateItemAsync(forest, key, cancellationToken: cancellationToken));
+            await dbContainer.CreateItemAsync(forest, key, cancellationToken: cancellationToken).ConfigureAwait(false);
         }
-
-        return Task.WhenAll(tasks);
     }
 }

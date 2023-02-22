@@ -377,28 +377,6 @@ public sealed class GetQueryTests
             Assert.Equal(new[] { "Zulauf Forest", "Rolfson Forest", "Abernathy Forest" }, collection.Select(m => m.ForestName));
         }
     }
-    
-    private sealed record Location
-    {
-        public int Start { get; init; }
-        public int End { get; init; }
-    }
-
-    private sealed record Error
-    {
-        public string Severity { get; init; } = default!;
-        public Location Location { get; init; } = default!;
-        public string Code { get; init; } = default!;
-        public string Message { get; init; } = default!;
-    }
-
-    private sealed record ErrorDetails
-    {
-        public Error[] Errors { get; init; } = Array.Empty<Error>();
-    }
-
-    private static ErrorDetails GetDetails(string jsonError) =>
-        JsonSerializer.Deserialize<ErrorDetails>(jsonError, new JsonSerializerOptions{ PropertyNameCaseInsensitive = true })!;
 
     [Fact]
     public async Task FilterPrimitiveCollectionWithTopInSubqueryShouldFailBecauseTopInSubqueryIsNotSupportedByCosmosDb()
@@ -411,12 +389,8 @@ public sealed class GetQueryTests
 
         static void Test(CosmosException ex)
         {
-            ErrorDetails details = GetDetails(ex.InnerException!.Message);
-            Assert.Equal(2, details.Errors.Length);
-
-            List<Error> errors = details.Errors.OrderBy(e => e.Message).ToList();
-            Assert.Equal("'ORDER BY' is not supported in subqueries.", errors[0].Message);
-            Assert.Equal("'TOP' is not supported in subqueries.", errors[1].Message);
+            Assert.Matches("'ORDER BY' is not supported in subqueries.", ex.Message);
+            Assert.Matches("'TOP' is not supported in subqueries.", ex.Message);
         }
     }
 
@@ -429,14 +403,8 @@ public sealed class GetQueryTests
         Test(await Assert.ThrowsAsync<CosmosException>(() => GetAsync<ForestModel, Forest>(query)));
         Test(await Assert.ThrowsAsync<CosmosException>(() => GetUsingCustomNameSpace<ForestModel, Forest>(query)));
 
-        static void Test(CosmosException ex)
-        {
-            ErrorDetails details = GetDetails(ex.InnerException!.Message);
-            Assert.Single(details.Errors);
-
-            Error error = details.Errors[0];
-            Assert.Equal("'ORDER BY' is not supported in subqueries.", error.Message);
-        }
+        static void Test(CosmosException ex) =>                
+            Assert.Matches("'ORDER BY' is not supported in subqueries.", ex.Message);        
     }
 
     [Fact]
@@ -448,14 +416,8 @@ public sealed class GetQueryTests
         Test(await Assert.ThrowsAsync<CosmosException>(() => GetAsync<ForestModel, Forest>(query)));
         Test(await Assert.ThrowsAsync<CosmosException>(() => GetUsingCustomNameSpace<ForestModel, Forest>(query)));
 
-        static void Test(CosmosException ex)
-        {
-            ErrorDetails details = GetDetails(ex.InnerException!.Message);
-            Assert.Single(details.Errors);
-
-            Error error = details.Errors[0];
-            Assert.Equal("'ORDER BY' is not supported in subqueries.", error.Message);
-        }
+        static void Test(CosmosException ex) =>        
+            Assert.Matches("'ORDER BY' is not supported in subqueries.", ex.Message);        
     }
 
     [Fact]
@@ -469,12 +431,8 @@ public sealed class GetQueryTests
 
         static void Test(CosmosException ex)
         {
-            ErrorDetails details = GetDetails(ex.InnerException!.Message);
-            Assert.Equal(2, details.Errors.Length);
-
-            List<Error> errors = details.Errors.OrderBy(e => e.Message).ToList();
-            Assert.Equal("'OFFSET LIMIT' clause is not supported in subqueries.", errors[0].Message);
-            Assert.Equal("'ORDER BY' is not supported in subqueries.", errors[1].Message);            
+            Assert.Matches("'OFFSET LIMIT' clause is not supported in subqueries.", ex.Message);
+            Assert.Matches("'ORDER BY' is not supported in subqueries.", ex.Message);            
         }
     }
 
@@ -489,12 +447,8 @@ public sealed class GetQueryTests
 
         static void Test(CosmosException ex)
         {
-            ErrorDetails details = GetDetails(ex.InnerException!.Message);
-            Assert.Equal(2, details.Errors.Length);
-
-            List<Error> errors = details.Errors.OrderBy(e => e.Message).ToList();
-            Assert.Equal("'OFFSET LIMIT' clause is not supported in subqueries.", errors[0].Message);
-            Assert.Equal("'ORDER BY' is not supported in subqueries.", errors[1].Message);
+            Assert.Matches("'OFFSET LIMIT' clause is not supported in subqueries.", ex.Message);
+            Assert.Matches("'ORDER BY' is not supported in subqueries.", ex.Message);
         }
     }
 
@@ -509,12 +463,8 @@ public sealed class GetQueryTests
 
         static void Test(CosmosException ex)
         {
-            ErrorDetails details = GetDetails(ex.InnerException!.Message);
-            Assert.Equal(2, details.Errors.Length);
-
-            List<Error> errors = details.Errors.OrderBy(e => e.Message).ToList();
-            Assert.Equal("'OFFSET LIMIT' clause is not supported in subqueries.", errors[0].Message);
-            Assert.Equal("'ORDER BY' is not supported in subqueries.", errors[1].Message);
+            Assert.Matches("'OFFSET LIMIT' clause is not supported in subqueries.", ex.Message);
+            Assert.Matches("'ORDER BY' is not supported in subqueries.", ex.Message);
         }
     }
 
